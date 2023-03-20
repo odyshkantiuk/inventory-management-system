@@ -4,10 +4,10 @@ This is an Inventory Management System built in the form of a GUI desktop applic
 
 ## What is the inventory management system used for?
 
-This application can be used by stores for easy maintenance and inventory management. It can be used to manage the inventory of:
-- Products 
-- Suppliers 
-- Customers 
+This application can be used by stores for easy maintenance and inventory management of:
+- Products
+- Suppliers
+- Customers
 - Employees
 - Transactions
 
