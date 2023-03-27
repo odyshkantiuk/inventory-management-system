@@ -1,6 +1,6 @@
 # Inventory Management System
 
-This is an Inventory Management System built according to MVC requirements developed in ***Java*** using ***MySQL*** as its database.
+This is an Inventory Management System built according to MVC requirements, developed in ***Java*** using ***MySQL*** as its database.
 
 ## What is the inventory management system used for?
 
