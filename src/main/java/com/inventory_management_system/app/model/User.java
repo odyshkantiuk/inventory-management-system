@@ -1,14 +1,14 @@
-package com.inventory_management_system.model;
+package com.inventory_management_system.app.model;
 
 public class User {
     private int id;
-    private String username;
+    private String name;
     private String password;
     private String role;
 
-    public User(int id, String username, String password, String role) {
+    public User(int id, String name, String password, String role) {
         this.id = id;
-        this.username = username;
+        this.name = name;
         this.password = password;
         this.role = role;
     }
@@ -22,12 +22,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
