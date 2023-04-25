@@ -3,13 +3,15 @@ package com.inventory_management_system.app.model;
 public class Supplier {
     private int id;
     private String name;
+    private String description;
     private String email;
     private String phone;
     private String address;
 
-    public Supplier(int id, String name, String email, String phone, String address) {
+    public Supplier(int id, String name, String description, String email, String phone, String address) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.email = email;
         this.phone = phone;
         this.address = address;
@@ -30,6 +32,14 @@ public class Supplier {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getEmail() {

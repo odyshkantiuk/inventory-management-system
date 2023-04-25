@@ -5,12 +5,14 @@ import java.util.List;
 
 public class Sale {
     private int id;
+    private double price;
     private Date date;
     private Customer customer;
     private List<Product> products;
 
-    public Sale(int id, Date date, Customer customer, List<Product> products) {
+    public Sale(int id, double price, Date date, Customer customer, List<Product> products) {
         this.id = id;
+        this.price = price;
         this.date = date;
         this.customer = customer;
         this.products = products;
@@ -23,6 +25,14 @@ public class Sale {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public Date getDate() {

@@ -15,8 +15,6 @@ public class StringConverter implements ValueConverter {
         if (str.equals("null")) return null;
         if (str.equals("\"\"")) return (T) "";
         if (str.equals("")) return (T) "";
-
-        str = str.substring(1, str.length() - 1);
         return (T) str;
     }
 }
