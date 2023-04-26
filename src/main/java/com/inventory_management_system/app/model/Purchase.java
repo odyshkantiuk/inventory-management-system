@@ -6,14 +6,13 @@ import java.util.List;
 public class Purchase {
     private int id;
     private Date date;
-    private Supplier supplier;
-    private List<Product> products;
+    private List<PurchasedProduct> purchasedProducts;
+    private double total;
 
-    public Purchase(int id, Date date, Supplier supplier, List<Product> products) {
+    public Purchase(int id, Date date, List<PurchasedProduct> purchasedProducts) {
         this.id = id;
         this.date = date;
-        this.supplier = supplier;
-        this.products = products;
+        this.purchasedProducts = purchasedProducts;
     }
 
     // Getters and Setters
@@ -33,34 +32,25 @@ public class Purchase {
         this.date = date;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public List<PurchasedProduct> getPurchasedProducts() {
+        return purchasedProducts;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+    public void setPurchasedProducts(List<PurchasedProduct> purchasedProducts) {
+        this.purchasedProducts = purchasedProducts;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public void addPurchasedProduct(PurchasedProduct purchasedProduct) {
+        this.purchasedProducts.add(purchasedProduct);
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public void addProduct(Product product) {
-        this.products.add(product);
-    }
-
-    public void removeProduct(Product product) {
-        this.products.remove(product);
+    public void removePurchasedProduct(PurchasedProduct purchasedProduct) {
+        this.purchasedProducts.remove(purchasedProduct);
     }
 
     public double calculateTotal() {
-        double total = 0;
-        for (Product product : products) {
-            total += product.getPrice();
+        for (PurchasedProduct purchasedProduct : purchasedProducts) {
+            total += purchasedProduct.calculateTotal();
         }
         return total;
     }

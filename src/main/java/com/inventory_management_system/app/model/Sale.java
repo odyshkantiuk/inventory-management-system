@@ -5,17 +5,16 @@ import java.util.List;
 
 public class Sale {
     private int id;
-    private double price;
     private Date date;
+    private List<SoldProduct> soldProducts;
+    private double total;
     private Customer customer;
-    private List<Product> products;
 
-    public Sale(int id, double price, Date date, Customer customer, List<Product> products) {
+    public Sale(int id, double price, Date date, List<SoldProduct> soldProducts, Customer customer) {
         this.id = id;
-        this.price = price;
         this.date = date;
+        this.soldProducts = soldProducts;
         this.customer = customer;
-        this.products = products;
     }
 
     // Getters and Setters
@@ -27,20 +26,28 @@ public class Sale {
         this.id = id;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public List<SoldProduct> getSoldProducts() {
+        return soldProducts;
+    }
+
+    public void setSoldProducts(List<SoldProduct> soldProducts) {
+        this.soldProducts = soldProducts;
+    }
+
+    public void addSoldProduct(SoldProduct soldProduct) {
+        this.soldProducts.add(soldProduct);
+    }
+
+    public void removeSoldProduct(SoldProduct soldProduct) {
+        this.soldProducts.remove(soldProduct);
     }
 
     public Customer getCustomer() {
@@ -51,26 +58,9 @@ public class Sale {
         this.customer = customer;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public void addProduct(Product product) {
-        this.products.add(product);
-    }
-
-    public void removeProduct(Product product) {
-        this.products.remove(product);
-    }
-
     public double calculateTotal() {
-        double total = 0;
-        for (Product product : products) {
-            total += product.getPrice();
+        for (SoldProduct soldProduct : soldProducts) {
+            total += soldProduct.calculateTotal();
         }
         return total;
     }
