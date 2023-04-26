@@ -14,9 +14,9 @@ public class DBUtil {
         } else {
             try {
                 String driver = "com.mysql.jdbc.Driver";
-                String url = "jdbc:mysql://localhost:3306/inventory";
+                String url = "jdbc:mysql://localhost:3306/inventory_management_system_db";
                 String user = "root";
-                String password = "password";
+                String password = "210872Qw";
 
                 Class.forName(driver);
                 connection = DriverManager.getConnection(url, user, password);
