@@ -1,4 +1,4 @@
-package com.inventory_management_system.app.model;
+package com.inventory_management_system.model;
 
 import java.util.Date;
 import java.util.List;

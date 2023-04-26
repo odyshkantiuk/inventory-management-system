@@ -1,4 +1,4 @@
-package com.inventory_management_system.app.model;
+package com.inventory_management_system.model;
 
 public class Product {
     private int id;
