@@ -13,7 +13,7 @@ import com.inventory_management_system.util.DBUtil;
 
 public class UserDaoImpl implements UserDao {
 
-    private Connection connection;
+    private final Connection connection;
 
     public UserDaoImpl() {
         connection = DBUtil.getConnection();
@@ -21,24 +21,21 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = new ArrayList<User>();
+        List<User> users = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("select * from users");
             ResultSet rs = preparedStatement.executeQuery();
-
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
                 String password = rs.getString("password");
                 String role = rs.getString("role");
-
                 User user = new User(id, name, password, role);
                 users.add(user);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return users;
     }
 
@@ -49,18 +46,15 @@ public class UserDaoImpl implements UserDao {
             PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id=?");
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
-
             if (rs.next()) {
                 String name = rs.getString("name");
                 String password = rs.getString("password");
                 String role = rs.getString("role");
-
                 user = new User(id, name, password, role);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return user;
     }
 

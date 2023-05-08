@@ -4,9 +4,9 @@ import java.util.List;
 import com.inventory_management_system.model.User;
 
 public interface UserDao {
-    public List<User> getAllUsers();
-    public User getUserById(int id);
-    public void addUser(User user);
-    public void updateUser(User user);
-    public void deleteUser(int id);
+    List<User> getAllUsers();
+    User getUserById(int id);
+    void addUser(User user);
+    void updateUser(User user);
+    void deleteUser(int id);
 }
