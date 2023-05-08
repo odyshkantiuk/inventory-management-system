@@ -1,7 +1,8 @@
 package com.inventory_management_system.dao;
 
-import java.util.List;
 import com.inventory_management_system.model.Category;
+
+import java.util.List;
 
 public interface CategoryDao {
     List<Category> getAllCategories();

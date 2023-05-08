@@ -2,7 +2,6 @@ package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.CategoryDao;
 import com.inventory_management_system.model.Category;
-import com.inventory_management_system.model.User;
 import com.inventory_management_system.util.DBUtil;
 
 import java.sql.*;
@@ -58,8 +57,8 @@ public class CategoryDaoImpl implements CategoryDao {
     public void addCategory(Category category) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into categories(name,description) values (?, ?)");
-            preparedStatement.setString(2, category.getName());
-            preparedStatement.setString(3, category.getDescription());
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.setString(2, category.getDescription());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,8 +69,9 @@ public class CategoryDaoImpl implements CategoryDao {
     public void updateCategory(Category category) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("update categories set name=?, description where id=?");
-            preparedStatement.setString(2, category.getName());
-            preparedStatement.setString(3, category.getDescription());
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.setString(2, category.getDescription());
+            preparedStatement.setInt(3, category.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

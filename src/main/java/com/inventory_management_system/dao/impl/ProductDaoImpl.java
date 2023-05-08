@@ -1,34 +1,38 @@
 package com.inventory_management_system.dao.impl;
 
-import com.inventory_management_system.dao.UserDao;
-import com.inventory_management_system.model.User;
+import com.inventory_management_system.dao.ProductDao;
+import com.inventory_management_system.model.Product;
 import com.inventory_management_system.util.DBUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDaoImpl implements UserDao {
+public class ProductDaoImpl implements ProductDao {
 
     private final Connection connection;
 
-    public UserDaoImpl() {
+    public ProductDaoImpl() {
         connection = DBUtil.getConnection();
     }
 
     @Override
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
+    public List<Product> getAllProducts() {
+        List<Product> products = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from users");
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from products");
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                String password = rs.getString("password");
-                String role = rs.getString("role");
-                User user = new User(id, name, password, role);
-                users.add(user);
+                String description = rs.getString("description");
+                double purchasePrice = rs.getDouble("purchase_price");
+                double salePrice = rs.getDouble("sale_price");
+                int quantity = rs.getInt("quantity");
+                int categoryId = rs.getInt("category_id");
+                int supplierId = rs.getInt("supplier_id");
+                Product product = new Product(id, name, description, purchasePrice, salePrice, quantity);
+                products.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();

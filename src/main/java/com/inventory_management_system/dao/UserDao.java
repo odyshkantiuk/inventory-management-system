@@ -1,7 +1,8 @@
 package com.inventory_management_system.dao;
 
-import java.util.List;
 import com.inventory_management_system.model.User;
+
+import java.util.List;
 
 public interface UserDao {
     List<User> getAllUsers();
