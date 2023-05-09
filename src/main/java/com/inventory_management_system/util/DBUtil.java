@@ -9,15 +9,12 @@ public class DBUtil {
     private static Connection connection = null;
 
     public static Connection getConnection() {
-        if (connection != null) {
-            return connection;
-        } else {
+        if (connection == null) {
             try {
                 String driver = "com.mysql.jdbc.Driver";
                 String url = "jdbc:mysql://localhost:3306/inventory_management_system_db";
                 String user = "root";
                 String password = "password";
-
                 Class.forName(driver);
                 connection = DriverManager.getConnection(url, user, password);
             } catch (ClassNotFoundException e) {
@@ -25,8 +22,7 @@ public class DBUtil {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            return connection;
         }
+        return connection;
     }
 }
