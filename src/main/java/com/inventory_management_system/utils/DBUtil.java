@@ -1,4 +1,4 @@
-package com.inventory_management_system.util;
+package com.inventory_management_system.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
