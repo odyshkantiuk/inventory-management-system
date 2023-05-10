@@ -1,18 +1,19 @@
 package com.inventory_management_system.model;
 
-import java.util.Date;
-import java.util.List;
+import java.sql.Timestamp;
 
 public class Purchase {
     private int id;
-    private Date date;
-    private List<PurchasedProduct> purchasedProducts;
+    private Timestamp time;
+    private Product product;
+    private int quantity;
     private double total;
 
-    public Purchase(int id, Date date, List<PurchasedProduct> purchasedProducts) {
+    public Purchase(int id, Timestamp time, Product product, int quantity) {
         this.id = id;
-        this.date = date;
-        this.purchasedProducts = purchasedProducts;
+        this.time = time;
+        this.product = product;
+        this.quantity = quantity;
     }
 
     // Getters and Setters
@@ -24,34 +25,32 @@ public class Purchase {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public Timestamp getTime() {
+        return time;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 
-    public List<PurchasedProduct> getPurchasedProducts() {
-        return purchasedProducts;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setPurchasedProducts(List<PurchasedProduct> purchasedProducts) {
-        this.purchasedProducts = purchasedProducts;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public void addPurchasedProduct(PurchasedProduct purchasedProduct) {
-        this.purchasedProducts.add(purchasedProduct);
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void removePurchasedProduct(PurchasedProduct purchasedProduct) {
-        this.purchasedProducts.remove(purchasedProduct);
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public double calculateTotal() {
-        for (PurchasedProduct purchasedProduct : purchasedProducts) {
-            total += purchasedProduct.calculateTotal();
-        }
+        total = product.getPurchasePrice() * quantity;
         return total;
     }
 }
