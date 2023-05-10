@@ -5,6 +5,7 @@ public class PurchasedProduct {
     private Product product;
     private int quantity;
     private double total;
+
     public PurchasedProduct(int id, Product product, int quantity) {
         this.id = id;
         this.product = product;
