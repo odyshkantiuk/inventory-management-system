@@ -2,7 +2,7 @@ package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.UserDao;
 import com.inventory_management_system.model.User;
-import com.inventory_management_system.utils.DBUtil;
+import com.inventory_management_system.util.DBUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -46,6 +46,43 @@ public class UserDaoImpl implements UserDao {
             if (rs.next()) {
                 String name = rs.getString("name");
                 String password = rs.getString("password");
+                String role = rs.getString("role");
+                user = new User(id, name, password, role);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    @Override
+    public User getUserByRole(String role) {
+        User user = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from users where role=?");
+            preparedStatement.setString(1, role);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String password = rs.getString("password");
+                user = new User(id, name, password, role);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public User getUser(String name, String password) {
+        User user = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from users where name=? and password=?");
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, password);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
                 String role = rs.getString("role");
                 user = new User(id, name, password, role);
             }

@@ -1,4 +1,4 @@
-package com.inventory_management_system.utils;
+package com.inventory_management_system.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,10 +11,10 @@ public class DBUtil {
     public static Connection getConnection() {
         if (connection == null) {
             try {
-                String driver = "com.mysql.jdbc.Driver";
+                String driver = "com.mysql.cj.jdbc.Driver";
                 String url = "jdbc:mysql://localhost:3306/inventory_management_system_db";
                 String user = "root";
-                String password = "password";
+                String password = "12345678";
                 Class.forName(driver);
                 connection = DriverManager.getConnection(url, user, password);
             } catch (ClassNotFoundException e) {

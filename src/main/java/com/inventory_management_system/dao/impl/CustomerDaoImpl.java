@@ -2,7 +2,7 @@ package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.CustomerDao;
 import com.inventory_management_system.model.Customer;
-import com.inventory_management_system.utils.DBUtil;
+import com.inventory_management_system.util.DBUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
