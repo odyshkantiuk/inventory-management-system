@@ -34,4 +34,8 @@ public class MainView extends JFrame {
         revalidate();
         repaint();
     }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
 }
