@@ -2,6 +2,7 @@ package com.inventory_management_system.controller;
 
 import com.inventory_management_system.dao.UserDao;
 import com.inventory_management_system.dao.impl.UserDaoImpl;
+import com.inventory_management_system.exception.AccountCreationException;
 import com.inventory_management_system.exception.LoginException;
 import com.inventory_management_system.model.User;
 
@@ -18,6 +19,10 @@ public class UserController {
         return userDao.getAllUsers();
     }
 
+    public List<User> getFilteredUsers(String filterName, String filterRole) {
+        return userDao.getFilteredUsers(filterName, filterRole);
+    }
+
     public User getUserById(int id) {
         return userDao.getUserById(id);
     }
@@ -29,15 +34,17 @@ public class UserController {
     public User getUser(String name, String password) {
         User user = userDao.getUser(name, password);
         if(user == null) {
-            LoginException loginException = new LoginException();
-        } else {
-
+            new LoginException();
         }
         return user;
     }
 
     public void addUser(User user) {
-        userDao.addUser(user);
+        if (!userDao.doesUserExist(user.getName())) {
+            userDao.addUser(user);
+        } else {
+            new AccountCreationException();
+        }
     }
 
     public void updateUser(User user) {

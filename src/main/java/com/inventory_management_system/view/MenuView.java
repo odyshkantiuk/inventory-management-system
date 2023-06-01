@@ -1,5 +1,7 @@
 package com.inventory_management_system.view;
 
+import com.inventory_management_system.model.User;
+
 import javax.swing.*;
 
 public class MenuView extends JFrame {
@@ -18,15 +20,22 @@ public class MenuView extends JFrame {
     private JPanel suppliersPanel;
     private JPanel customersPanel;
     private JPanel usersPanel;
-    private final JPanel[] panels = new JPanel[7];
 
-    public MenuView() {
+    private UsersView usersView;
+    private final JPanel[] panels = new JPanel[7];
+    private final User user;
+
+    public MenuView(User user) {
         setContentPane(mainPanel);
         setTitle("Inventory Management System");
-        setSize(1200,1000);
+        setSize(800,600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
         setVisible(true);
 
+        this.user = user;
+        usersView.setUser(user);
+        usersView.showAddUserPanel();
         panels[0] = inventoryPanel;
         panels[1] = purchasesPanel;
         panels[2] = salesPanel;
@@ -68,6 +77,7 @@ public class MenuView extends JFrame {
         productsPanel = new ProductsView().getProductsPanel();
         suppliersPanel = new SuppliersView().getSuppliersPanel();
         customersPanel = new CustomersView().getCustomersPanel();
-        usersPanel = new UsersView().getUsersPanel();
+        usersView = new UsersView();
+        usersPanel = usersView.getUsersPanel();
     }
 }

@@ -23,12 +23,12 @@ public class LoginView extends JFrame {
             UserController userController = new UserController();
             String name = loginNameField.getText();
             String password = loginPasswordField.getText();
-            name = "default";
+            name = "director";
             password = "12345678";
             User user = userController.getUser(name, password);
             if (user != null) {
                 dispose();
-                new MenuView();
+                MenuView menuView = new MenuView(user);
             }
         });
     }
