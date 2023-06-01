@@ -28,7 +28,7 @@ public class LoginView extends JFrame {
             User user = userController.getUser(name, password);
             if (user != null) {
                 dispose();
-                new MainView();
+                new MenuView();
             }
         });
     }
