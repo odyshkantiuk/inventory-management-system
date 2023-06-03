@@ -2,10 +2,17 @@ package com.inventory_management_system.view;
 
 import com.inventory_management_system.controller.UserController;
 import com.inventory_management_system.exception.PasswordsMatchException;
+import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsersView {
@@ -26,38 +33,46 @@ public class UsersView {
     private JPanel addUserPanel;
     private JComboBox roleComboBox1;
     private JButton deleteButton;
+    private JButton applyButton;
+    private JPanel changePanel;
 
-    private UserController userController = new UserController();
+    private final UserController userController = new UserController();
     private User user;
 
     public UsersView() {
-        reloadTable(userController.getAllUsers());
-
         addUserButton.addActionListener(e -> {
-            String name = nameTextField1.getText();;
+            String name = nameTextField1.getText();
             String role = roleComboBox1.getSelectedItem().toString();
             if (passwordField1.getText().equals(passwordField2.getText())) {
                 String password = passwordField1.getText();
-                userController.addUser(new User(0, name, password, role));
+                if (name.length() <= 45 && password.length() <= 128 && role.length() <= 45) {
+                    userController.addUser(new User(0, name, password, role));
+                    reloadTable(user, userController.getAllUsers());
+                } else {
+                    new TooLongException();
+                }
             } else {
                 new PasswordsMatchException();
             }
-            reloadTable(userController.getAllUsers());
         });
 
         editAccountButton.addActionListener(e -> {
             String name = nameTextField2.getText();
             if (passwordField3.getText().equals(passwordField4.getText())) {
                 String password = passwordField3.getText();
-                userController.updateUser(new User(user.getId(), name, password, user.getRole()));
+                if (name.length() <= 45 && password.length() <= 128) {
+                    userController.updateUser(new User(user.getId(), name, password, user.getRole()));
+                    reloadTable(user, userController.getAllUsers());
+                } else {
+                    new TooLongException();
+                }
             } else {
                 new PasswordsMatchException();
             }
-            reloadTable(userController.getAllUsers());
         });
 
         reloadButton.addActionListener(e -> {
-            reloadTable(userController.getAllUsers());
+            reloadTable(user, userController.getAllUsers());
         });
 
         deleteButton.addActionListener(e -> {
@@ -65,19 +80,38 @@ public class UsersView {
             if (selectedRow != -1) {
                 Object id = table.getValueAt(selectedRow, 0);
                 Object role = table.getValueAt(selectedRow, 2);
-                if (!role.equals("director") && !role.equals("admin")){
+                if (!role.equals("admin") && !user.getRole().equals("employee")){
                     userController.deleteUser((Integer) id);
                 } else if (role.equals("admin") && user.getRole().equals("director")) {
                     userController.deleteUser((Integer) id);
                 }
             }
-            reloadTable(userController.getAllUsers());
+            reloadTable(user, userController.getAllUsers());
         });
 
         searchButton.addActionListener(e -> {
             String filterName = searchTextField.getText();
             String filterRole = roleComboBox2.getSelectedItem().toString();
-            reloadTable(userController.getFilteredUsers(filterName, filterRole));
+            reloadTable(user, userController.getFilteredUsers(filterName, filterRole));
+        });
+
+        applyButton.addActionListener(e -> {
+            List<User> users = new ArrayList<>();
+            DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+            int rowCount = tableModel.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                int id = (Integer) tableModel.getValueAt(i, 0);
+                String name = (String) tableModel.getValueAt(i, 1);
+                String password = userController.getUserById(id).getPassword();
+                String role = (String) tableModel.getValueAt(i, 2);
+                if (name.length() <= 45 && password.length() <= 128 && role.length() <= 45) {
+                    users.add(new User(id, name, password, role));
+                } else {
+                    new TooLongException();
+                }
+            }
+            userController.updateUsers(users);
+            reloadTable(user, userController.getAllUsers());
         });
     }
 
@@ -90,31 +124,58 @@ public class UsersView {
         return usersPanel;
     }
 
-    private void reloadTable(List<User> users) {
+    public void reloadTable(User mainUser, List<User> users) {
         DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 Object value = getValueAt(row, 2);
-                return !value.equals("director") && column != 0;
+                if (!user.getRole().equals("director")) {
+                    if (user.getRole().equals("admin") && value.equals("employee")) {
+                        return column != 2 && column != 0;
+                    }
+                    return column != 2 && column != 1 && column != 0;
+                }
+                return column != 0;
             }
         };
         model.addColumn("id");
         model.addColumn("Name");
         model.addColumn("Role");
         for (User user : users) {
-            Object[] rowData = {user.getId(), user.getName(), user.getRole()};
-            model.addRow(rowData);
+            if (!user.getRole().equals("director")) {
+                Object[] rowData = {user.getId(), user.getName(), user.getRole()};
+                model.addRow(rowData);
+            }
         }
         table.setModel(model);
+        if (user.getRole().equals("director")) {
+            TableColumnModel columnModel = table.getColumnModel();
+            columnModel.getColumn(2).setCellRenderer(new ComboBoxCellRenderer());
+            columnModel.getColumn(2).setCellEditor(new DefaultCellEditor(roleComboBox1));
+            table.setRowHeight(20);
+        }
     }
 
     public void showAddUserPanel(){
         String role = user.getRole();
         if (role.equals("director") || role.equals("admin")) {
             addUserPanel.setVisible(true);
+            changePanel.setVisible(true);
             if (role.equals("director")) {
                 roleComboBox1.addItem("admin");
             }
+        }
+    }
+
+    private class ComboBoxCellRenderer extends JComboBox<String> implements TableCellRenderer {
+        public ComboBoxCellRenderer() {
+            super(roleComboBox1.getModel());
+            setOpaque(true);
+        }
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setSelectedItem(value);
+            return this;
         }
     }
 }

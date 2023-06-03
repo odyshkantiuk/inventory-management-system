@@ -39,6 +39,63 @@ public class SupplierDaoImpl implements SupplierDao {
     }
 
     @Override
+    public List<Supplier> getFilteredSuppliers(String filterName, String filterEmail, String filterPhone, String filterAddress) {
+        List<Supplier> suppliers = new ArrayList<>();
+        try {
+            StringBuilder stringBuilder = new StringBuilder("SELECT * FROM suppliers WHERE");
+            List<String> conditions = new ArrayList<>();
+            List<Object> parameters = new ArrayList<>();
+
+            if (filterName != null && !filterName.isEmpty()) {
+                conditions.add("name LIKE ?");
+                parameters.add("%" + filterName + "%");
+            }
+
+            if (filterEmail != null && !filterEmail.isEmpty()) {
+                conditions.add("email LIKE ?");
+                parameters.add("%" + filterEmail + "%");
+            }
+
+            if (filterPhone != null && !filterPhone.isEmpty()) {
+                conditions.add("phone LIKE ?");
+                parameters.add("%" + filterPhone + "%");
+            }
+
+            if (filterAddress != null && !filterAddress.isEmpty()) {
+                conditions.add("address LIKE ?");
+                parameters.add("%" + filterAddress + "%");
+            }
+
+            if (!conditions.isEmpty()) {
+                String conditionsStr = String.join(" AND ", conditions);
+                stringBuilder.append(" ").append(conditionsStr);
+            } else {
+                stringBuilder.append(" 1");
+            }
+
+            PreparedStatement preparedStatement = connection.prepareStatement(stringBuilder.toString());
+            for (int i = 0; i < parameters.size(); i++) {
+                preparedStatement.setObject(i + 1, parameters.get(i));
+            }
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone");
+                String address = rs.getString("address");
+                Supplier supplier = new Supplier(id, name, description, email, phone, address);
+                suppliers.add(supplier);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return suppliers;
+    }
+
+    @Override
     public Supplier getSupplierById(int id) {
         Supplier supplier = null;
         try {
@@ -99,5 +156,21 @@ public class SupplierDaoImpl implements SupplierDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean doesSupplierExist(String name) {
+        boolean supplierExists = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from suppliers where name=?");
+            preparedStatement.setString(1, name);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                supplierExists = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return supplierExists;
     }
 }

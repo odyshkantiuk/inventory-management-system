@@ -160,6 +160,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void updateUsers(List<User> users) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("update users set name=?, password=?, role=? where id=?");
+            for (User user : users) {
+                preparedStatement.setString(1, user.getName());
+                preparedStatement.setString(2, user.getPassword());
+                preparedStatement.setString(3, user.getRole());
+                preparedStatement.setInt(4, user.getId());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void deleteUser(int id) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("delete from users where id=?");
@@ -171,11 +188,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean doesUserExist(String name) {
+    public boolean doesUserExist(User user) {
         boolean userExists = false;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from users where name=?");
-            preparedStatement.setString(1, name);
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id<>? and name=?");
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setString(2, user.getName());
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
                 userExists = true;

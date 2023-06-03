@@ -2,10 +2,10 @@ package com.inventory_management_system.exception;
 
 import javax.swing.*;
 
-public class AccountCreationException {
-    public AccountCreationException() {
+public class TooLongException {
+    public TooLongException() {
         JOptionPane.showMessageDialog(null,
-                "An account with that name already exists",
+                "The values provided are too long",
                 "Error message",
                 JOptionPane.ERROR_MESSAGE);
     }

@@ -2,11 +2,13 @@ package com.inventory_management_system.controller;
 
 import com.inventory_management_system.dao.UserDao;
 import com.inventory_management_system.dao.impl.UserDaoImpl;
-import com.inventory_management_system.exception.AccountCreationException;
+import com.inventory_management_system.exception.AlreadyExistsException;
 import com.inventory_management_system.exception.LoginException;
 import com.inventory_management_system.model.User;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class UserController {
     private final UserDao userDao;
@@ -40,15 +42,33 @@ public class UserController {
     }
 
     public void addUser(User user) {
-        if (!userDao.doesUserExist(user.getName())) {
+        if (!userDao.doesUserExist(user)) {
             userDao.addUser(user);
         } else {
-            new AccountCreationException();
+            new AlreadyExistsException("User");
         }
     }
 
     public void updateUser(User user) {
-        userDao.updateUser(user);
+        if (!userDao.doesUserExist(user)) {
+            userDao.updateUser(user);
+        } else {
+            new AlreadyExistsException("User");
+        }
+    }
+
+    public void updateUsers(List<User> users) {
+        Set<String> nameSet = new HashSet<>();
+        for (User user : users){
+            if (userDao.doesUserExist(user)) {
+                new AlreadyExistsException("User");
+                return;
+            } else if (!nameSet.add(user.getName())) {
+                new AlreadyExistsException("User");
+                return;
+            }
+        }
+        userDao.updateUsers(users);
     }
 
     public void deleteUser(int id) {
