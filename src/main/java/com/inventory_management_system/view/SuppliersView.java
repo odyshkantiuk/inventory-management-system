@@ -5,9 +5,9 @@ import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.model.Supplier;
 
 import javax.swing.*;
+import java.awt.event.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SuppliersView {
@@ -27,6 +27,7 @@ public class SuppliersView {
     private JButton searchButton;
     private JButton reloadButton;
     private JButton applyButton;
+    private JButton moreInfoButton;
 
     private final SupplierController supplierController = new SupplierController();
 
@@ -63,6 +64,41 @@ public class SuppliersView {
                 supplierController.deleteSupplier((Integer) table.getValueAt(selectedRow, 0));
                 reloadTable(supplierController.getAllSuppliers());
             }
+        });
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = table.columnAtPoint(e.getPoint());
+                moreInfoButton.setVisible(column == 2);
+            }
+        });
+
+        applyButton.addActionListener(e -> {
+            List<Supplier> suppliers = new ArrayList<>();
+            DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+            int rowCount = tableModel.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                int id = (Integer) tableModel.getValueAt(i, 0);
+                String name = (String) tableModel.getValueAt(i, 1);
+                String description = supplierController.getSupplierById(id).getDescription();
+                String email = (String) tableModel.getValueAt(i, 3);
+                String phone = (String) tableModel.getValueAt(i, 4);
+                String address = (String) tableModel.getValueAt(i, 5);
+                if (name.length() <= 45 && email.length() <= 255 && phone.length() <= 20 && address.length() <= 255) {
+                    suppliers.add(new Supplier(id, name, description, email, phone, address));
+                } else {
+                    new TooLongException();
+                }
+            }
+            supplierController.updateSuppliers(suppliers);
+            reloadTable(supplierController.getAllSuppliers());
+        });
+
+        moreInfoButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            int id = (int) table.getValueAt(selectedRow, 0);
+            new InfoView(supplierController.getSupplierById(id).getDescription());
         });
     }
 

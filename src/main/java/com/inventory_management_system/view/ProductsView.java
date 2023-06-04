@@ -4,7 +4,9 @@ import javax.swing.*;
 
 public class ProductsView {
     private JPanel productsPanel;
-    private JTable table1;
+
+    public ProductsView() {
+    }
 
     public JPanel getProductsPanel() {
         return productsPanel;

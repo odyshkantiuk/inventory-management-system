@@ -25,12 +25,13 @@ public class PurchaseDaoImpl implements PurchaseDao {
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
+                double price = rs.getDouble("price");
                 Timestamp time = rs.getTimestamp("time");
                 int productId = rs.getInt("product_id");
                 int quantity = rs.getInt("quantity");
                 ProductDaoImpl productDao = new ProductDaoImpl();
                 Product product = productDao.getProductById(productId);
-                Purchase purchase = new Purchase(id, time, product, quantity);
+                Purchase purchase = new Purchase(id, price, time, product, quantity);
                 purchases.add(purchase);
             }
         } catch (SQLException e) {
@@ -47,12 +48,13 @@ public class PurchaseDaoImpl implements PurchaseDao {
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
+                double price = rs.getDouble("price");
                 Timestamp time = rs.getTimestamp("time");
                 int productId = rs.getInt("product_id");
                 int quantity = rs.getInt("quantity");
                 ProductDaoImpl productDao = new ProductDaoImpl();
                 Product product = productDao.getProductById(productId);
-                purchase = new Purchase(id, time, product, quantity);
+                purchase = new Purchase(id, price, time, product, quantity);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,11 +65,12 @@ public class PurchaseDaoImpl implements PurchaseDao {
     @Override
     public void addPurchase(Purchase purchase) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into purchases(time,product_id,quantity,total) values (?, ?, ?, ?)");
-            preparedStatement.setTimestamp(1, purchase.getTime());
-            preparedStatement.setInt(2, purchase.getProduct().getId());
-            preparedStatement.setInt(3, purchase.getQuantity());
-            preparedStatement.setDouble(4, purchase.calculateTotal());
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into purchases(price, time,product_id,quantity,total) values (?, ?, ?, ?, ?)");
+            preparedStatement.setDouble(1, purchase.getPrice());
+            preparedStatement.setTimestamp(2, purchase.getTime());
+            preparedStatement.setInt(3, purchase.getProduct().getId());
+            preparedStatement.setInt(4, purchase.getQuantity());
+            preparedStatement.setDouble(5, purchase.calculateTotal());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,12 +80,13 @@ public class PurchaseDaoImpl implements PurchaseDao {
     @Override
     public void updatePurchase(Purchase purchase) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("update purchases set time=?, product_id=?, quantity=?, total=? where id=?");
-            preparedStatement.setTimestamp(1, purchase.getTime());
-            preparedStatement.setInt(2, purchase.getProduct().getId());
-            preparedStatement.setInt(3, purchase.getQuantity());
-            preparedStatement.setDouble(4, purchase.calculateTotal());
-            preparedStatement.setInt(5, purchase.getId());
+            PreparedStatement preparedStatement = connection.prepareStatement("update purchases set price=?, time=?, product_id=?, quantity=?, total=? where id=?");
+            preparedStatement.setDouble(1, purchase.getPrice());
+            preparedStatement.setTimestamp(2, purchase.getTime());
+            preparedStatement.setInt(3, purchase.getProduct().getId());
+            preparedStatement.setInt(4, purchase.getQuantity());
+            preparedStatement.setDouble(5, purchase.calculateTotal());
+            preparedStatement.setInt(6, purchase.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

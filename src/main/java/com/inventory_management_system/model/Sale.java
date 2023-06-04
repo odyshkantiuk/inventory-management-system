@@ -4,14 +4,16 @@ import java.sql.Timestamp;
 
 public class Sale {
     private int id;
+    private double price;
     private Timestamp time;
     private Customer customer;
     private Product product;
     private int quantity;
     private double total;
 
-    public Sale(int id, Timestamp time, Customer customer, Product product, int quantity) {
+    public Sale(int id, double price, Timestamp time, Customer customer, Product product, int quantity) {
         this.id = id;
+        this.price = price;
         this.time = time;
         this.customer = customer;
         this.product = product;
@@ -25,6 +27,14 @@ public class Sale {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public Timestamp getTime() {
@@ -60,7 +70,7 @@ public class Sale {
     }
 
     public double calculateTotal() {
-        total = product.getSalePrice() * quantity;
+        total = price * quantity;
         return total;
     }
 }

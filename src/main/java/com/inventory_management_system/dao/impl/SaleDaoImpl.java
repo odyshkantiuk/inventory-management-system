@@ -26,6 +26,7 @@ public class SaleDaoImpl implements SaleDao {
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
+                double price = rs.getDouble("price");
                 Timestamp time = rs.getTimestamp("time");
                 int customerId = rs.getInt("customer_id");
                 int productId = rs.getInt("product_id");
@@ -34,7 +35,7 @@ public class SaleDaoImpl implements SaleDao {
                 Customer customer = customerDao.getCustomerById(customerId);
                 ProductDaoImpl productDao = new ProductDaoImpl();
                 Product product = productDao.getProductById(productId);
-                Sale sale = new Sale(id, time, customer, product, quantity);
+                Sale sale = new Sale(id, price, time, customer, product, quantity);
                 sales.add(sale);
             }
         } catch (SQLException e) {
@@ -51,6 +52,7 @@ public class SaleDaoImpl implements SaleDao {
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
+                double price = rs.getDouble("price");
                 Timestamp time = rs.getTimestamp("time");
                 int customerId = rs.getInt("customer_id");
                 int productId = rs.getInt("product_id");
@@ -59,7 +61,7 @@ public class SaleDaoImpl implements SaleDao {
                 Customer customer = customerDao.getCustomerById(customerId);
                 ProductDaoImpl productDao = new ProductDaoImpl();
                 Product product = productDao.getProductById(productId);
-                sale = new Sale(id, time, customer, product, quantity);
+                sale = new Sale(id, price, time, customer, product, quantity);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,12 +72,13 @@ public class SaleDaoImpl implements SaleDao {
     @Override
     public void addSale(Sale sale) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into sales(time,customer_id,product_id,quantity,total) values (?, ?, ?, ?, ?)");
-            preparedStatement.setTimestamp(1, sale.getTime());
-            preparedStatement.setInt(2, sale.getCustomer().getId());
-            preparedStatement.setInt(3, sale.getProduct().getId());
-            preparedStatement.setInt(4, sale.getQuantity());
-            preparedStatement.setDouble(5, sale.calculateTotal());
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into sales(price,time,customer_id,product_id,quantity,total) values (?, ?, ?, ?, ?, ?)");
+            preparedStatement.setDouble(1, sale.getPrice());
+            preparedStatement.setTimestamp(2, sale.getTime());
+            preparedStatement.setInt(3, sale.getCustomer().getId());
+            preparedStatement.setInt(4, sale.getProduct().getId());
+            preparedStatement.setInt(5, sale.getQuantity());
+            preparedStatement.setDouble(6, sale.calculateTotal());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,13 +88,14 @@ public class SaleDaoImpl implements SaleDao {
     @Override
     public void updateSale(Sale sale) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("update sales set time=?, customer_id=?, product_id=?, quantity=?, total=? where id=?");
-            preparedStatement.setTimestamp(1, sale.getTime());
-            preparedStatement.setInt(2, sale.getCustomer().getId());
-            preparedStatement.setInt(3, sale.getProduct().getId());
-            preparedStatement.setInt(4, sale.getQuantity());
-            preparedStatement.setDouble(5, sale.calculateTotal());
-            preparedStatement.setInt(6, sale.getId());
+            PreparedStatement preparedStatement = connection.prepareStatement("update sales set price=?, time=?, customer_id=?, product_id=?, quantity=?, total=? where id=?");
+            preparedStatement.setDouble(1, sale.getPrice());
+            preparedStatement.setTimestamp(2, sale.getTime());
+            preparedStatement.setInt(3, sale.getCustomer().getId());
+            preparedStatement.setInt(4, sale.getProduct().getId());
+            preparedStatement.setInt(5, sale.getQuantity());
+            preparedStatement.setDouble(6, sale.calculateTotal());
+            preparedStatement.setInt(7, sale.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

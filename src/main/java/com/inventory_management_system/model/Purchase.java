@@ -4,13 +4,15 @@ import java.sql.Timestamp;
 
 public class Purchase {
     private int id;
+    private double price;
     private Timestamp time;
     private Product product;
     private int quantity;
     private double total;
 
-    public Purchase(int id, Timestamp time, Product product, int quantity) {
+    public Purchase(int id, double price, Timestamp time, Product product, int quantity) {
         this.id = id;
+        this.price = price;
         this.time = time;
         this.product = product;
         this.quantity = quantity;
@@ -23,6 +25,14 @@ public class Purchase {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public Timestamp getTime() {
@@ -50,7 +60,7 @@ public class Purchase {
     }
 
     public double calculateTotal() {
-        total = product.getPurchasePrice() * quantity;
+        total = price * quantity;
         return total;
     }
 }

@@ -10,6 +10,7 @@ public interface SupplierDao {
     Supplier getSupplierById(int id);
     void addSupplier(Supplier supplier);
     void updateSupplier(Supplier supplier);
+    void updateSuppliers(List<Supplier> suppliers);
     void deleteSupplier(int id);
-    boolean doesSupplierExist(String name);
+    boolean doesSupplierExist(Supplier supplier);
 }

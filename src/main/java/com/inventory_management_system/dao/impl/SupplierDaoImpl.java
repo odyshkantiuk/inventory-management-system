@@ -2,6 +2,7 @@ package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.SupplierDao;
 import com.inventory_management_system.model.Supplier;
+import com.inventory_management_system.model.User;
 import com.inventory_management_system.util.DBUtil;
 
 import java.sql.*;
@@ -148,6 +149,25 @@ public class SupplierDaoImpl implements SupplierDao {
     }
 
     @Override
+    public void updateSuppliers(List<Supplier> suppliers) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("update suppliers set name=?, description=?, email=?, phone=?, address=? where id=?");
+            for (Supplier supplier : suppliers) {
+                preparedStatement.setString(1, supplier.getName());
+                preparedStatement.setString(2, supplier.getDescription());
+                preparedStatement.setString(3, supplier.getEmail());
+                preparedStatement.setString(4, supplier.getPhone());
+                preparedStatement.setString(5, supplier.getAddress());
+                preparedStatement.setInt(6, supplier.getId());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void deleteSupplier(int id) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("delete from suppliers where id=?");
@@ -159,11 +179,12 @@ public class SupplierDaoImpl implements SupplierDao {
     }
 
     @Override
-    public boolean doesSupplierExist(String name) {
+    public boolean doesSupplierExist(Supplier supplier) {
         boolean supplierExists = false;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from suppliers where name=?");
-            preparedStatement.setString(1, name);
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from suppliers where id<>? and name=?");
+            preparedStatement.setInt(1, supplier.getId());
+            preparedStatement.setString(2, supplier.getName());
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
                 supplierExists = true;
