@@ -2,6 +2,7 @@ package com.inventory_management_system.controller;
 
 import com.inventory_management_system.dao.ProductDao;
 import com.inventory_management_system.dao.impl.ProductDaoImpl;
+import com.inventory_management_system.exception.AlreadyExistsException;
 import com.inventory_management_system.model.Product;
 
 import java.util.List;
@@ -21,8 +22,18 @@ public class ProductController {
         return productDao.getProductById(id);
     }
 
-    public void addProduct(Product product) {
-        productDao.addProduct(product);
+    public Product getProductByName(String name) {
+        return productDao.getProductByName(name);
+    }
+
+    public boolean addProduct(Product product) {
+        if (!productDao.doesProductExist(product)) {
+            productDao.addProduct(product);
+            return true;
+        } else {
+            new AlreadyExistsException("Product");
+            return false;
+        }
     }
 
     public void updateProduct(Product product) {

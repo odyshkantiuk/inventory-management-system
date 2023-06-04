@@ -118,6 +118,27 @@ public class SupplierDaoImpl implements SupplierDao {
     }
 
     @Override
+    public Supplier getSupplierByName(String name) {
+        Supplier supplier = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from suppliers where name=?");
+            preparedStatement.setString(1, name);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String description = rs.getString("description");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone");
+                String address = rs.getString("address");
+                supplier = new Supplier(id, name, description, email, phone, address);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return supplier;
+    }
+
+    @Override
     public void addSupplier(Supplier supplier) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into suppliers(name,description,email,phone,address) values (?, ?, ?, ?, ?)");

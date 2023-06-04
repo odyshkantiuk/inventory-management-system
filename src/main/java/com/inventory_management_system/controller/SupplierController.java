@@ -25,9 +25,12 @@ public class SupplierController {
         return supplierDao.getFilteredSuppliers(filterName, filterEmail, filterPhone, filterAddress);
     }
 
-
     public Supplier getSupplierById(int id) {
         return supplierDao.getSupplierById(id);
+    }
+
+    public Supplier getSupplierByName(String name) {
+        return supplierDao.getSupplierByName(name);
     }
 
     public void addSupplier(Supplier supplier) {

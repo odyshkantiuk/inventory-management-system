@@ -35,10 +35,6 @@ public class MainView extends JFrame {
         setVisible(true);
 
         this.user = user;
-        usersView.setUser(user);
-        usersView.showAddUserPanel();
-        UserController userController = new UserController();
-        usersView.reloadTable(user, userController.getAllUsers());
         panels[0] = inventoryPanel;
         panels[1] = purchasesPanel;
         panels[2] = salesPanel;
@@ -59,7 +55,13 @@ public class MainView extends JFrame {
 
         customersButton.addActionListener(e -> switchPanel(customersPanel));
 
-        usersButton.addActionListener(e -> switchPanel(usersPanel));
+        usersButton.addActionListener(e -> {
+            usersView.setUser(user);
+            usersView.showAddUserPanel();
+            UserController userController = new UserController();
+            usersView.reloadTable(user, userController.getAllUsers());
+            switchPanel(usersPanel);
+        });
     }
 
     private void switchPanel(JPanel newPanel) {

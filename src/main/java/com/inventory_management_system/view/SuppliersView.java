@@ -30,6 +30,7 @@ public class SuppliersView {
     private JButton moreInfoButton;
 
     private final SupplierController supplierController = new SupplierController();
+    private final ProductsView productsView = new ProductsView();
 
     public SuppliersView() {
         reloadTable(supplierController.getAllSuppliers());
@@ -43,6 +44,7 @@ public class SuppliersView {
             if (name.length() <= 45 && description.length() <= 255 && email.length() <= 255 && phone.length() <= 20 && address.length() <= 255) {
                 supplierController.addSupplier(new Supplier(0, name, description, email, phone, address));
                 reloadTable(supplierController.getAllSuppliers());
+                productsView.reloadSuppliers();
             } else {
                 new TooLongException();
             }
@@ -63,6 +65,7 @@ public class SuppliersView {
             if (selectedRow != -1) {
                 supplierController.deleteSupplier((Integer) table.getValueAt(selectedRow, 0));
                 reloadTable(supplierController.getAllSuppliers());
+                productsView.reloadSuppliers();
             }
         });
 
@@ -93,6 +96,7 @@ public class SuppliersView {
             }
             supplierController.updateSuppliers(suppliers);
             reloadTable(supplierController.getAllSuppliers());
+            productsView.reloadSuppliers();
         });
 
         moreInfoButton.addActionListener(e -> {
@@ -120,7 +124,7 @@ public class SuppliersView {
         model.addColumn("Phone");
         model.addColumn("Address");
         for (Supplier supplier : suppliers) {
-            Object[] rowData = {supplier.getId(), supplier.getName(), "...", supplier.getEmail(), supplier.getPhone(), supplier.getAddress()};
+            Object[] rowData = {supplier.getId(), supplier.getName(), supplier.getDescription(), supplier.getEmail(), supplier.getPhone(), supplier.getAddress()};
             model.addRow(rowData);
         }
         table.setModel(model);

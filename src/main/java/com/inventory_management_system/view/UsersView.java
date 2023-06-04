@@ -35,6 +35,7 @@ public class UsersView {
     private JButton deleteButton;
     private JButton applyButton;
     private JPanel changePanel;
+    private JComboBox tableComboBox = new JComboBox<>(new String[]{"admin", "employee"});
 
     private final UserController userController = new UserController();
     private User user;
@@ -150,8 +151,8 @@ public class UsersView {
         table.setModel(model);
         if (user.getRole().equals("director")) {
             TableColumnModel columnModel = table.getColumnModel();
-            columnModel.getColumn(2).setCellRenderer(new ComboBoxCellRenderer());
-            columnModel.getColumn(2).setCellEditor(new DefaultCellEditor(roleComboBox1));
+            columnModel.getColumn(2).setCellRenderer(new ComboBoxCellRenderer(tableComboBox));
+            columnModel.getColumn(2).setCellEditor(new DefaultCellEditor(tableComboBox));
             table.setRowHeight(20);
         }
     }
@@ -168,8 +169,8 @@ public class UsersView {
     }
 
     private class ComboBoxCellRenderer extends JComboBox<String> implements TableCellRenderer {
-        public ComboBoxCellRenderer() {
-            super(roleComboBox1.getModel());
+        public ComboBoxCellRenderer(JComboBox comboBox) {
+            super(comboBox.getModel());
             setOpaque(true);
         }
         @Override

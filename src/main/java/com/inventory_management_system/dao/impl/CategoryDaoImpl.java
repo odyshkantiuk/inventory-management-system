@@ -2,6 +2,7 @@ package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.CategoryDao;
 import com.inventory_management_system.model.Category;
+import com.inventory_management_system.model.Supplier;
 import com.inventory_management_system.util.DBUtil;
 
 import java.sql.*;
@@ -54,6 +55,24 @@ public class CategoryDaoImpl implements CategoryDao {
     }
 
     @Override
+    public Category getCategoryByName(String name) {
+        Category category = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from categories where name=?");
+            preparedStatement.setString(1, name);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String description = rs.getString("description");
+                category = new Category(id, name, description);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return category;
+    }
+
+    @Override
     public void addCategory(Category category) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into categories(name,description) values (?, ?)");
@@ -79,13 +98,30 @@ public class CategoryDaoImpl implements CategoryDao {
     }
 
     @Override
-    public void deleteCategory(int id) {
+    public void deleteCategory(String name) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("delete from categories where id=?");
-            preparedStatement.setInt(1, id);
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from categories where name=?");
+            preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean doesCategoryExist(Category category) {
+        boolean categoryExists = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from categories where id<>? and name=?");
+            preparedStatement.setInt(1, category.getId());
+            preparedStatement.setString(2, category.getName());
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                categoryExists = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categoryExists;
     }
 }

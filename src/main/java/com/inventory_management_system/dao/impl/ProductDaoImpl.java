@@ -74,6 +74,33 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public Product getProductByName(String name) {
+        Product product = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from products where name=?");
+            preparedStatement.setString(1, name);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String description = rs.getString("description");
+                double purchasePrice = rs.getDouble("purchase_price");
+                double salePrice = rs.getDouble("sale_price");
+                int quantity = rs.getInt("quantity");
+                int categoryId = rs.getInt("category_id");
+                int supplierId = rs.getInt("supplier_id");
+                CategoryDaoImpl categoryDao = new CategoryDaoImpl();
+                Category category = categoryDao.getCategoryById(categoryId);
+                SupplierDaoImpl supplierDao = new SupplierDaoImpl();
+                Supplier supplier = supplierDao.getSupplierById(supplierId);
+                product = new Product(id, name, description, purchasePrice, salePrice, quantity, category, supplier);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product;
+    }
+
+    @Override
     public void addProduct(Product product) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into products(name,description,purchase_price,sale_price,quantity,category_id,supplier_id) values (?, ?, ?, ?, ?, ?, ?)");
@@ -117,5 +144,22 @@ public class ProductDaoImpl implements ProductDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean doesProductExist(Product product) {
+        boolean productExists = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from products where id<>? and name=?");
+            preparedStatement.setInt(1, product.getId());
+            preparedStatement.setString(2, product.getName());
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                productExists = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productExists;
     }
 }
