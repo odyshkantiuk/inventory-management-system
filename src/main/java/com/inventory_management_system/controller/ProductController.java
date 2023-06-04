@@ -5,7 +5,9 @@ import com.inventory_management_system.dao.impl.ProductDaoImpl;
 import com.inventory_management_system.exception.AlreadyExistsException;
 import com.inventory_management_system.model.Product;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ProductController {
     private final ProductDao productDao;
@@ -38,6 +40,20 @@ public class ProductController {
 
     public void updateProduct(Product product) {
         productDao.updateProduct(product);
+    }
+
+    public void updateProducts(List<Product> products) {
+        Set<String> nameSet = new HashSet<>();
+        for (Product product : products) {
+            if (productDao.doesProductExist(product)) {
+                new AlreadyExistsException("Product");
+                return;
+            } else if (!nameSet.add(product.getName())) {
+                new AlreadyExistsException("Product");
+                return;
+            }
+        }
+        productDao.updateProducts(products);
     }
 
     public void deleteProduct(int id) {

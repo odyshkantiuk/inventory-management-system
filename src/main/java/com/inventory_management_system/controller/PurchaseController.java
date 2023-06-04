@@ -24,14 +24,10 @@ public class PurchaseController {
 
     public void addPurchase(Purchase purchase) {
         purchaseDao.addPurchase(purchase);
-        Product product = purchase.getProduct();
-        product.setQuantity(product.getQuantity() + purchase.getQuantity());
     }
 
     public void updatePurchase(Purchase purchase) {
         purchaseDao.updatePurchase(purchase);
-        Product product = purchase.getProduct();
-        product.setQuantity(product.getQuantity() + purchase.getQuantity());
     }
 
     public void deletePurchase(int id) {

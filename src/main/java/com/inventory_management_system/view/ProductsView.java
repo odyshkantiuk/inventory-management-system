@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductsView {
@@ -134,6 +135,33 @@ public class ProductsView {
             int id = (int) table.getValueAt(selectedRow, 0);
             new InfoView(productController.getProductById(id).getDescription());
         });
+
+        applyButton.addActionListener(e -> {
+            List<Product> products = new ArrayList<>();
+            DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+            int rowCount = tableModel.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                int id = (Integer) tableModel.getValueAt(i, 0);
+                String name = (String) tableModel.getValueAt(i, 1);
+                String description = (String) tableModel.getValueAt(i, 2);
+                String purchasePrice = (String) tableModel.getValueAt(i, 3);
+                String salePrice = (String) tableModel.getValueAt(i, 4);
+                String quantity = (String) tableModel.getValueAt(i, 5);
+                String category = (String) tableModel.getValueAt(i, 6);
+                String supplier = (String) tableModel.getValueAt(i, 7);
+                if (name.length() <= 45 && description.length() <= 255) {
+                    try {
+                        products.add(new Product(id, name, description, Double.parseDouble(purchasePrice), Double.parseDouble(salePrice), Integer.parseInt(quantity), categoryController.getCategoryByName(category), supplierController.getSupplierByName(supplier)));
+                    } catch (NumberFormatException ex) {
+                        new NumberInputException();
+                    }
+                } else {
+                    new TooLongException();
+                }
+            }
+            productController.updateProducts(products);
+            reloadTable(productController.getAllProducts());
+        });
     }
 
     public void reloadSuppliers() {
@@ -178,7 +206,7 @@ public class ProductsView {
         model.addColumn("Category");
         model.addColumn("Supplier");
         for (Product product : products) {
-            Object[] rowData = {product.getId(), product.getName(), product.getDescription(), product.getPurchasePrice(), product.getSalePrice(), product.getQuantity(), product.getCategory().getName(), product.getSupplier().getName()};
+            Object[] rowData = {product.getId(), product.getName(), product.getDescription(), String.valueOf(product.getPurchasePrice()), String.valueOf(product.getSalePrice()), String.valueOf(product.getQuantity()), product.getCategory().getName(), product.getSupplier().getName()};
             model.addRow(rowData);
         }
         table.setModel(model);

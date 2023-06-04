@@ -1,6 +1,7 @@
 package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.CategoryDao;
+import com.inventory_management_system.exception.UnableToDeleteException;
 import com.inventory_management_system.model.Category;
 import com.inventory_management_system.model.Supplier;
 import com.inventory_management_system.util.DBUtil;
@@ -103,6 +104,8 @@ public class CategoryDaoImpl implements CategoryDao {
             PreparedStatement preparedStatement = connection.prepareStatement("delete from categories where name=?");
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            new UnableToDeleteException("category");
         } catch (SQLException e) {
             e.printStackTrace();
         }

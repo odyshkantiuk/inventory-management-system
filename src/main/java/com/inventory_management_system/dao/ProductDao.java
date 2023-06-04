@@ -10,6 +10,7 @@ public interface ProductDao {
     Product getProductByName(String name);
     void addProduct(Product product);
     void updateProduct(Product product);
+    void updateProducts(List<Product> products);
     void deleteProduct(int id);
     boolean doesProductExist(Product product);
 }

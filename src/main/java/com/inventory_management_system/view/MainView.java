@@ -23,6 +23,7 @@ public class MainView extends JFrame {
     private JPanel usersPanel;
 
     private UsersView usersView;
+    private ProductsView productsView;
     private final JPanel[] panels = new JPanel[7];
     private final User user;
 
@@ -49,7 +50,10 @@ public class MainView extends JFrame {
 
         salesButton.addActionListener(e -> switchPanel(salesPanel));
 
-        productsButton.addActionListener(e -> switchPanel(productsPanel));
+        productsButton.addActionListener(e -> {
+            productsView.reloadSuppliers();
+            switchPanel(productsPanel);
+        });
 
         suppliersButton.addActionListener(e -> switchPanel(suppliersPanel));
 
@@ -79,7 +83,8 @@ public class MainView extends JFrame {
         inventoryPanel = new InventoryView().getInventoryPanel();
         purchasesPanel = new PurchasesView().getPurchasesPanel();
         salesPanel = new SalesView().getSalesPanel();
-        productsPanel = new ProductsView().getProductsPanel();
+        productsView = new ProductsView();
+        productsPanel = productsView.getProductsPanel();
         suppliersPanel = new SuppliersView().getSuppliersPanel();
         customersPanel = new CustomersView().getCustomersPanel();
         usersView = new UsersView();

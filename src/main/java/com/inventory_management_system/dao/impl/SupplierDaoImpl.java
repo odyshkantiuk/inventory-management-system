@@ -1,6 +1,7 @@
 package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.SupplierDao;
+import com.inventory_management_system.exception.UnableToDeleteException;
 import com.inventory_management_system.model.Supplier;
 import com.inventory_management_system.model.User;
 import com.inventory_management_system.util.DBUtil;
@@ -194,6 +195,8 @@ public class SupplierDaoImpl implements SupplierDao {
             PreparedStatement preparedStatement = connection.prepareStatement("delete from suppliers where id=?");
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            new UnableToDeleteException("supplier");
         } catch (SQLException e) {
             e.printStackTrace();
         }

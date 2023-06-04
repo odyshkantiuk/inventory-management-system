@@ -136,6 +136,27 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public void updateProducts(List<Product> products) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("update products set name=?, description=?, purchase_price=?, sale_price=?, quantity=?, category_id=?, supplier_id=? where id=?");
+            for (Product product : products) {
+                preparedStatement.setString(1, product.getName());
+                preparedStatement.setString(2, product.getDescription());
+                preparedStatement.setDouble(3, product.getPurchasePrice());
+                preparedStatement.setDouble(4, product.getSalePrice());
+                preparedStatement.setInt(5, product.getQuantity());
+                preparedStatement.setInt(6, product.getCategory().getId());
+                preparedStatement.setInt(7, product.getSupplier().getId());
+                preparedStatement.setInt(8, product.getId());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void deleteProduct(int id) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("delete from products where id=?");

@@ -30,7 +30,6 @@ public class SuppliersView {
     private JButton moreInfoButton;
 
     private final SupplierController supplierController = new SupplierController();
-    private final ProductsView productsView = new ProductsView();
 
     public SuppliersView() {
         reloadTable(supplierController.getAllSuppliers());
@@ -44,7 +43,6 @@ public class SuppliersView {
             if (name.length() <= 45 && description.length() <= 255 && email.length() <= 255 && phone.length() <= 20 && address.length() <= 255) {
                 supplierController.addSupplier(new Supplier(0, name, description, email, phone, address));
                 reloadTable(supplierController.getAllSuppliers());
-                productsView.reloadSuppliers();
             } else {
                 new TooLongException();
             }
@@ -65,7 +63,6 @@ public class SuppliersView {
             if (selectedRow != -1) {
                 supplierController.deleteSupplier((Integer) table.getValueAt(selectedRow, 0));
                 reloadTable(supplierController.getAllSuppliers());
-                productsView.reloadSuppliers();
             }
         });
 
@@ -84,7 +81,7 @@ public class SuppliersView {
             for (int i = 0; i < rowCount; i++) {
                 int id = (Integer) tableModel.getValueAt(i, 0);
                 String name = (String) tableModel.getValueAt(i, 1);
-                String description = supplierController.getSupplierById(id).getDescription();
+                String description = (String) tableModel.getValueAt(i, 2);
                 String email = (String) tableModel.getValueAt(i, 3);
                 String phone = (String) tableModel.getValueAt(i, 4);
                 String address = (String) tableModel.getValueAt(i, 5);
@@ -96,7 +93,6 @@ public class SuppliersView {
             }
             supplierController.updateSuppliers(suppliers);
             reloadTable(supplierController.getAllSuppliers());
-            productsView.reloadSuppliers();
         });
 
         moreInfoButton.addActionListener(e -> {
