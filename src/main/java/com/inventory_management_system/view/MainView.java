@@ -2,6 +2,7 @@ package com.inventory_management_system.view;
 
 import com.inventory_management_system.controller.ProductController;
 import com.inventory_management_system.controller.PurchaseController;
+import com.inventory_management_system.controller.SaleController;
 import com.inventory_management_system.controller.UserController;
 import com.inventory_management_system.model.User;
 
@@ -29,6 +30,8 @@ public class MainView extends JFrame {
     private final ProductController productController = new ProductController();
     private PurchasesView purchasesView;
     private final PurchaseController purchaseController = new PurchaseController();
+    private SalesView salesView;
+    private final SaleController saleController = new SaleController();
     private final JPanel[] panels = new JPanel[7];
     private final User user;
 
@@ -57,7 +60,12 @@ public class MainView extends JFrame {
             switchPanel(purchasesPanel);
         });
 
-        salesButton.addActionListener(e -> switchPanel(salesPanel));
+        salesButton.addActionListener(e -> {
+            salesView.reloadCustomer();
+            salesView.reloadProduct();
+            salesView.reloadTable(saleController.getAllSales());
+            switchPanel(salesPanel);
+        });
 
         productsButton.addActionListener(e -> {
             productsView.reloadSuppliers();
@@ -90,10 +98,10 @@ public class MainView extends JFrame {
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        inventoryPanel = new InventoryView().getInventoryPanel();
         purchasesView = new PurchasesView();
         purchasesPanel = purchasesView.getPurchasesPanel();
-        salesPanel = new SalesView().getSalesPanel();
+        salesView = new SalesView();
+        salesPanel = salesView.getSalesPanel();
         productsView = new ProductsView();
         productsPanel = productsView.getProductsPanel();
         suppliersPanel = new SuppliersView().getSuppliersPanel();
