@@ -1,5 +1,9 @@
 package com.inventory_management_system.model;
-
+/**
+ * Customer model class.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class Customer {
     private int id;
     private String name;
@@ -7,6 +11,15 @@ public class Customer {
     private String phone;
     private String address;
 
+    /**
+     * Constructs a Customer object with the specified id, name, email, phone, and address.
+     *
+     * @param id      the unique identifier for the customer
+     * @param name    the name of the customer
+     * @param email   the email address of the customer
+     * @param phone   the phone number of the customer
+     * @param address the address of the customer
+     */
     public Customer(int id, String name, String email, String phone, String address) {
         this.id = id;
         this.name = name;

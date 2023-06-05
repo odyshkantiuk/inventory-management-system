@@ -1,5 +1,9 @@
 package com.inventory_management_system.model;
-
+/**
+ * Product model class.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class Product {
     private int id;
     private String name;
@@ -10,6 +14,19 @@ public class Product {
     private Category category;
     private Supplier supplier;
 
+    /**
+     * Constructs a Product object with the specified id, name, description, purchase price, sale price, quantity,
+     * category, and supplier.
+     *
+     * @param id            the unique identifier for the product
+     * @param name          the name of the product
+     * @param description   the description of the product
+     * @param purchasePrice the purchase price of the product
+     * @param salePrice     the sale price of the product
+     * @param quantity      the quantity of the product
+     * @param category      the category of the product
+     * @param supplier      the supplier of the product
+     */
     public Product(int id, String name, String description, double purchasePrice, double salePrice, int quantity, Category category, Supplier supplier) {
         this.id = id;
         this.name = name;

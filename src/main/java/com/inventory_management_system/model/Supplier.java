@@ -1,5 +1,9 @@
 package com.inventory_management_system.model;
-
+/**
+ * Supplier model class.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class Supplier {
     private int id;
     private String name;
@@ -8,6 +12,16 @@ public class Supplier {
     private String phone;
     private String address;
 
+    /**
+     * Constructs a Supplier object with the specified id, name, description, email, phone, and address.
+     *
+     * @param id          the unique identifier for the supplier
+     * @param name        the name of the supplier
+     * @param description the description of the supplier
+     * @param email       the email address of the supplier
+     * @param phone       the phone number of the supplier
+     * @param address     the address of the supplier
+     */
     public Supplier(int id, String name, String description, String email, String phone, String address) {
         this.id = id;
         this.name = name;

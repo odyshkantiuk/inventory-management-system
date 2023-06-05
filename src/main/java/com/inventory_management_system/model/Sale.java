@@ -1,7 +1,11 @@
 package com.inventory_management_system.model;
 
 import java.sql.Timestamp;
-
+/**
+ * Sale model class.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class Sale {
     private int id;
     private double price;
@@ -11,6 +15,16 @@ public class Sale {
     private int quantity;
     private double total;
 
+    /**
+     * Constructs a Sale object with the specified id, price, time, customer, product, and quantity.
+     *
+     * @param id       the unique identifier for the sale
+     * @param price    the price of the sale
+     * @param time     the timestamp of the sale
+     * @param customer the customer who made the sale
+     * @param product  the product sold
+     * @param quantity the quantity of the product sold
+     */
     public Sale(int id, double price, Timestamp time, Customer customer, Product product, int quantity) {
         this.id = id;
         this.price = price;

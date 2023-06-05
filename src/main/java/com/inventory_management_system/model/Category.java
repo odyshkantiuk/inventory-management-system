@@ -1,10 +1,21 @@
 package com.inventory_management_system.model;
-
+/**
+ * Category model class.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class Category {
     private int id;
     private String name;
     private String description;
 
+    /**
+     * Constructs a Category object with the specified id, name, and description.
+     *
+     * @param id          the unique identifier for the category
+     * @param name        the name of the category
+     * @param description the description of the category
+     */
     public Category(int id, String name, String description) {
         this.id = id;
         this.name = name;
@@ -18,6 +29,7 @@ public class Category {
     public void setId(int id) {
         this.id = id;
     }
+
 
     public String getName() {
         return name;
