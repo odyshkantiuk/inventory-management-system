@@ -28,6 +28,10 @@ public class CustomerController {
         return customerDao.getCustomerById(id);
     }
 
+    public Customer getCustomerByName(String name) {
+        return customerDao.getCustomerByName(name);
+    }
+
     public void addCustomer(Customer customer) {
         if (!customerDao.doesCustomerExist(customer)) {
             customerDao.addCustomer(customer);

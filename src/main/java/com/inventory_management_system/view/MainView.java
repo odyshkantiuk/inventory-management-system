@@ -10,7 +10,6 @@ import javax.swing.*;
 
 public class MainView extends JFrame {
     private JPanel mainPanel;
-    private JButton inventoryButton;
     private JButton purchasesButton;
     private JButton salesButton;
     private JButton productsButton;
@@ -32,7 +31,7 @@ public class MainView extends JFrame {
     private final PurchaseController purchaseController = new PurchaseController();
     private SalesView salesView;
     private final SaleController saleController = new SaleController();
-    private final JPanel[] panels = new JPanel[7];
+    private final JPanel[] panels = new JPanel[6];
     private final User user;
 
     public MainView(User user) {
@@ -44,15 +43,12 @@ public class MainView extends JFrame {
         setVisible(true);
 
         this.user = user;
-        panels[0] = inventoryPanel;
-        panels[1] = purchasesPanel;
-        panels[2] = salesPanel;
-        panels[3] = productsPanel;
-        panels[4] = suppliersPanel;
-        panels[5] = customersPanel;
-        panels[6] = usersPanel;
-
-        inventoryButton.addActionListener(e -> switchPanel(inventoryPanel));
+        panels[0] = purchasesPanel;
+        panels[1] = salesPanel;
+        panels[2] = productsPanel;
+        panels[3] = suppliersPanel;
+        panels[4] = customersPanel;
+        panels[5] = usersPanel;
 
         purchasesButton.addActionListener(e -> {
             purchasesView.reloadProduct();

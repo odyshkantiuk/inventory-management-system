@@ -114,9 +114,11 @@ public class PurchasesView {
 
         searchButton.addActionListener(e -> {
             String product = (String) productComboBox2.getSelectedItem();
-            int productId = 0;
-            if (!product.equals("")) {
+            int productId;
+            try {
                 productId = productController.getProductByName(product).getId();
+            } catch (NullPointerException ex) {
+                productId = 0;
             }
             String pattern = "yyyy-MM-dd";
             SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);

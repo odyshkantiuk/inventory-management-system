@@ -118,6 +118,26 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
+    public Customer getCustomerByName(String name) {
+        Customer customer = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from customers where name=?");
+            preparedStatement.setString(1, name);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone");
+                String address = rs.getString("address");
+                customer = new Customer(id, name, email, phone, address);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
+    @Override
     public void addCustomer(Customer customer) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into customers(name,email,phone,address) values (?, ?, ?, ?)");
