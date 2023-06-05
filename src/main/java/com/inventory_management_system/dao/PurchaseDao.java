@@ -9,5 +9,6 @@ public interface PurchaseDao {
     Purchase getPurchaseById(int id);
     void addPurchase(Purchase purchase);
     void updatePurchase(Purchase purchase);
+    void updatePurchases(List<Purchase> purchases);
     void deletePurchase(int id);
 }

@@ -41,7 +41,37 @@ public class PurchaseController {
         purchaseDao.updatePurchase(purchase);
     }
 
+    public void updatePurchases(List<Purchase> purchases) {
+        for (Purchase purchase : purchases) {
+            if (purchase.getQuantity() > 0) {
+                Purchase oldPurchase = purchaseDao.getPurchaseById(purchase.getId());
+                Product product = purchase.getProduct();
+                int quantity = purchase.getQuantity() - oldPurchase.getQuantity();
+                if (product.getQuantity() + quantity >= 0) {
+                    product.setQuantity(product.getQuantity() + quantity);
+                } else {
+                    product.setQuantity(0);
+                }
+                productController.updateProduct(product);
+            } else {
+                new QuantityException();
+                return;
+            }
+        }
+        purchaseDao.updatePurchases(purchases);
+    }
+
     public void deletePurchase(int id) {
+        Purchase purchase = purchaseDao.getPurchaseById(id);
+        Product product = purchase.getProduct();
+        int purchaseQuantity = purchase.getQuantity();
+        int productQuantity = product.getQuantity();
+        if (productQuantity - purchaseQuantity >= 0) {
+            product.setQuantity(productQuantity - purchaseQuantity);
+        } else {
+            product.setQuantity(0);
+        }
+        productController.updateProduct(product);
         purchaseDao.deletePurchase(id);
     }
 }

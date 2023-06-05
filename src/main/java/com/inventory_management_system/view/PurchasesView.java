@@ -5,17 +5,20 @@ import com.inventory_management_system.controller.PurchaseController;
 import com.inventory_management_system.exception.NumberInputException;
 import com.inventory_management_system.model.Product;
 import com.inventory_management_system.model.Purchase;
-import com.inventory_management_system.model.Supplier;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PurchasesView {
@@ -44,6 +47,8 @@ public class PurchasesView {
         AutoCompleteDecorator.decorate(tableProductComboBox);
         reloadTable(purchaseController.getAllPurchases());
 
+        DatePicker dp = new DatePicker();
+
         reloadButton.addActionListener(e -> reloadTable(purchaseController.getAllPurchases()));
 
         productComboBox1.addActionListener(e -> {
@@ -66,9 +71,7 @@ public class PurchasesView {
         });
 
         addPurchaseButton.addActionListener(e -> {
-            String productName = (String) productComboBox1.getSelectedItem();
             Product product = productController.getProductByName((String) productComboBox1.getSelectedItem());
-            Supplier supplier = product.getSupplier();
             try {
                 double price = Double.parseDouble(priceTextField.getText());
                 int quantity = Integer.parseInt(quantityTextField.getText());
@@ -86,6 +89,37 @@ public class PurchasesView {
             if (selectedRow != -1) {
                 purchaseController.deletePurchase((Integer) table.getValueAt(selectedRow, 0));
                 reloadTable(purchaseController.getAllPurchases());
+            }
+        });
+
+        applyButton.addActionListener(e -> {
+            List<Purchase> purchases = new ArrayList<>();
+            DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+            int rowCount = tableModel.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                int id = (Integer) tableModel.getValueAt(i, 0);
+                String productStr = (String) tableModel.getValueAt(i, 1);
+                Timestamp time = (Timestamp) tableModel.getValueAt(i, 3);
+                String price = (String) tableModel.getValueAt(i, 4);
+                String quantityStr = (String) tableModel.getValueAt(i, 5);
+                try {
+                    int quantity = Integer.parseInt(quantityStr);
+                    Product product = productController.getProductByName(productStr);
+                    Purchase purchase = new Purchase(id, Double.parseDouble(price), time, product, quantity);
+                    purchases.add(purchase);
+                } catch (NumberFormatException ex) {
+                    new NumberInputException();
+                }
+            }
+            purchaseController.updatePurchases(purchases);
+            reloadTable(purchaseController.getAllPurchases());
+        });
+
+        searchButton.addActionListener(e -> {
+            String product = (String) productComboBox2.getSelectedItem();
+            int productId = 0;
+            if (!product.equals("")) {
+                productId = productController.getProductByName(product).getId();
             }
         });
     }

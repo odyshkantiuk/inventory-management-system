@@ -1,9 +1,11 @@
 package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.PurchaseDao;
+import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.model.Product;
 import com.inventory_management_system.model.Purchase;
 import com.inventory_management_system.util.DBUtil;
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -72,6 +74,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
             preparedStatement.setInt(4, purchase.getQuantity());
             preparedStatement.setDouble(5, purchase.calculateTotal());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -88,6 +92,29 @@ public class PurchaseDaoImpl implements PurchaseDao {
             preparedStatement.setDouble(5, purchase.calculateTotal());
             preparedStatement.setInt(6, purchase.getId());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updatePurchases(List<Purchase> purchases) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("update purchases set price=?, time=?, product_id=?, quantity=?, total=? where id=?");
+            for (Purchase purchase : purchases) {
+                preparedStatement.setDouble(1, purchase.getPrice());
+                preparedStatement.setTimestamp(2, purchase.getTime());
+                preparedStatement.setInt(3, purchase.getProduct().getId());
+                preparedStatement.setInt(4, purchase.getQuantity());
+                preparedStatement.setDouble(5, purchase.calculateTotal());
+                preparedStatement.setInt(6, purchase.getId());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
