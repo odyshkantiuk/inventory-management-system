@@ -21,7 +21,11 @@ import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The ProductsView class represents the graphical user interface for managing products in the inventory management system.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class ProductsView {
     private JPanel productsPanel;
     private JTabbedPane tabbedPane1;

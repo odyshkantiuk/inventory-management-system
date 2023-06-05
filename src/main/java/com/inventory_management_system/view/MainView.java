@@ -7,7 +7,11 @@ import com.inventory_management_system.controller.UserController;
 import com.inventory_management_system.model.User;
 
 import javax.swing.*;
-
+/**
+ * The MainView class represents the graphical user interface for managing view in the inventory management system.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class MainView extends JFrame {
     private JPanel mainPanel;
     private JButton purchasesButton;

@@ -9,7 +9,11 @@ import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * User dao implementation.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class UserDaoImpl implements UserDao {
 
     private final Connection connection;

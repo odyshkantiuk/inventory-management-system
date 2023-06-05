@@ -9,7 +9,11 @@ import java.awt.event.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The SuppliersView class represents the graphical user interface for managing suppliers in the inventory management system.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class SuppliersView {
     private JPanel suppliersPanel;
     private JButton deleteButton;

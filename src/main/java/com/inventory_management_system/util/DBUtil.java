@@ -3,11 +3,18 @@ package com.inventory_management_system.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+/**
+ * The DBUtil class provides utility methods for handling database connections.
+ */
 public class DBUtil {
 
     private static Connection connection = null;
 
+    /**
+     * Retrieves the database connection.
+     *
+     * @return The database connection.
+     */
     public static Connection getConnection() {
         if (connection == null) {
             try {

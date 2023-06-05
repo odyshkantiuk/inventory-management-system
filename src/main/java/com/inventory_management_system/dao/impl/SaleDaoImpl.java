@@ -12,7 +12,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * Sale dao implementation.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class SaleDaoImpl implements SaleDao {
 
     private final Connection connection;

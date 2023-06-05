@@ -4,14 +4,17 @@ import com.inventory_management_system.dao.CategoryDao;
 import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.exception.UnableToDeleteException;
 import com.inventory_management_system.model.Category;
-import com.inventory_management_system.model.Supplier;
 import com.inventory_management_system.util.DBUtil;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Category dao implementation.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class CategoryDaoImpl implements CategoryDao {
 
     private final Connection connection;

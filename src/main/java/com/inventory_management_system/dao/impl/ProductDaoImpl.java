@@ -11,7 +11,11 @@ import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Product dao implementation.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class ProductDaoImpl implements ProductDao {
 
     private final Connection connection;

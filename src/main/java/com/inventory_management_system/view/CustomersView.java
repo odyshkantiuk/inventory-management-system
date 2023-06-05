@@ -10,7 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The CustomersView class represents the graphical user interface for managing customers in the inventory management system.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class CustomersView {
     private JPanel customersPanel;
     private JTextField nameTextField1;

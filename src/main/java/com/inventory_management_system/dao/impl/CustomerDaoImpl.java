@@ -3,14 +3,17 @@ package com.inventory_management_system.dao.impl;
 import com.inventory_management_system.dao.CustomerDao;
 import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.model.Customer;
-import com.inventory_management_system.model.Supplier;
 import com.inventory_management_system.util.DBUtil;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Customer dao implementation.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class CustomerDaoImpl implements CustomerDao {
 
     private final Connection connection;

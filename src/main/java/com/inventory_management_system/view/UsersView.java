@@ -14,7 +14,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The UsersView class represents the graphical user interface for managing users in the inventory management system.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class UsersView {
     private JPanel usersPanel;
     private JTextField searchTextField;

@@ -11,7 +11,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * Purchase dao implementation.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class PurchaseDaoImpl implements PurchaseDao {
 
     private final Connection connection;

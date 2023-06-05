@@ -24,7 +24,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * The SalesView class represents the graphical user interface for managing sales in the inventory management system.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class SalesView {
     private JPanel salesPanel;
     private JComboBox productComboBox1;

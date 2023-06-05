@@ -19,7 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-
+/**
+ * The PurchasesView class represents the graphical user interface for managing purchases in the inventory management system.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class PurchasesView {
     private JPanel purchasesPanel;
     private JTable table;

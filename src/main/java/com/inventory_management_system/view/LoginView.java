@@ -4,7 +4,11 @@ import com.inventory_management_system.controller.UserController;
 import com.inventory_management_system.model.User;
 
 import javax.swing.*;
-
+/**
+ * The LoginView class represents the graphical user interface for managing logins in the inventory management system.
+ *
+ * @author Oleksandr Dyshkantiuk
+ */
 public class LoginView extends JFrame {
     private JPanel loginPanel;
     private JTextField loginNameField;
@@ -23,8 +27,6 @@ public class LoginView extends JFrame {
             UserController userController = new UserController();
             String name = loginNameField.getText();
             String password = loginPasswordField.getText();
-            name = "director";
-            password = "12345678";
             User user = userController.getUser(name, password);
             if (user != null) {
                 dispose();
