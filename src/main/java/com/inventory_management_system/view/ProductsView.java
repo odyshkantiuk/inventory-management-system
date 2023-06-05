@@ -5,7 +5,6 @@ import com.inventory_management_system.controller.ProductController;
 import com.inventory_management_system.controller.PurchaseController;
 import com.inventory_management_system.controller.SupplierController;
 import com.inventory_management_system.exception.NumberInputException;
-import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.model.Category;
 import com.inventory_management_system.model.Product;
 import com.inventory_management_system.model.Purchase;
@@ -17,8 +16,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
@@ -73,12 +70,8 @@ public class ProductsView {
         addCategoryButton.addActionListener(e -> {
             String name = categoryNameTextField.getText();
             String description = categoryDescriptionTextField.getText();
-            if (name.length() <= 45 && description.length() <= 255) {
-                categoryController.addCategory(new Category(0, name, description));
-                reloadCategory();
-            } else {
-                new TooLongException();
-            }
+            categoryController.addCategory(new Category(0, name, description));
+            reloadCategory();
         });
 
         deleteCategoryButton.addActionListener(e -> {
@@ -96,17 +89,13 @@ public class ProductsView {
                 int quantity = Integer.parseInt(quantityTextField.getText());
                 String category = (String) categoryComboBox1.getSelectedItem();
                 String supplier = (String) supplierComboBox1.getSelectedItem();
-                if (name.length() <= 45 && description.length() <= 255) {
-                    Product product = new Product(0, name, description, purchasePrice, salePrice, quantity, categoryController.getCategoryByName(category), supplierController.getSupplierByName(supplier));
-                    if (productController.addProduct(product)){
-                        Timestamp time = new Timestamp(System.currentTimeMillis());
-                        product.setId(productController.getProductByName(name).getId());
-                        purchaseController.addPurchase(new Purchase(0, purchasePrice, time, product, quantity));
-                    }
-                    reloadTable(productController.getAllProducts());
-                } else {
-                    new TooLongException();
+                Product product = new Product(0, name, description, purchasePrice, salePrice, quantity, categoryController.getCategoryByName(category), supplierController.getSupplierByName(supplier));
+                if (productController.addProduct(product)){
+                    Timestamp time = new Timestamp(System.currentTimeMillis());
+                    product.setId(productController.getProductByName(name).getId());
+                    purchaseController.addPurchase(new Purchase(0, purchasePrice, time, product, quantity));
                 }
+                reloadTable(productController.getAllProducts());
             } catch (NumberFormatException ex) {
                 new NumberInputException();
             }
@@ -149,38 +138,54 @@ public class ProductsView {
                 String quantity = (String) tableModel.getValueAt(i, 5);
                 String category = (String) tableModel.getValueAt(i, 6);
                 String supplier = (String) tableModel.getValueAt(i, 7);
-                if (name.length() <= 45 && description.length() <= 255) {
-                    try {
-                        products.add(new Product(id, name, description, Double.parseDouble(purchasePrice), Double.parseDouble(salePrice), Integer.parseInt(quantity), categoryController.getCategoryByName(category), supplierController.getSupplierByName(supplier)));
-                    } catch (NumberFormatException ex) {
-                        new NumberInputException();
-                    }
-                } else {
-                    new TooLongException();
+                try {
+                    products.add(new Product(id, name, description, Double.parseDouble(purchasePrice), Double.parseDouble(salePrice), Integer.parseInt(quantity), categoryController.getCategoryByName(category), supplierController.getSupplierByName(supplier)));
+                } catch (NumberFormatException ex) {
+                    new NumberInputException();
                 }
             }
             productController.updateProducts(products);
             reloadTable(productController.getAllProducts());
         });
+
+        searchButton.addActionListener(e -> {
+            String name = nameTextField2.getText();
+            String category = (String) categoryComboBox2.getSelectedItem();
+            String supplier = (String) supplierComboBox2.getSelectedItem();
+            int categoryId = 0;
+            int supplierId = 0;
+            if (category.equals("") && !supplier.equals("")) {
+                supplierId = supplierController.getSupplierByName(supplier).getId();
+            } else if (supplier.equals("") && !category.equals("")) {
+                categoryId = categoryController.getCategoryByName(category).getId();
+            } else if (!category.equals("") && !supplier.equals("")) {
+                supplierId = supplierController.getSupplierByName(supplier).getId();
+                categoryId = categoryController.getCategoryByName(category).getId();
+            }
+            reloadTable(productController.getFilteredProducts(name, categoryId, supplierId));
+        });
     }
 
     public void reloadSuppliers() {
         List<Supplier> suppliers = supplierController.getAllSuppliers();
-        reloadComboBox(suppliers, supplierComboBox1);
-        reloadComboBox(suppliers, supplierComboBox2);
-        reloadComboBox(suppliers, tableSupplierComboBox);
+        reloadComboBox(suppliers, supplierComboBox1, false);
+        reloadComboBox(suppliers, supplierComboBox2, true);
+        reloadComboBox(suppliers, tableSupplierComboBox, false);
     }
 
     public void reloadCategory() {
         List<Category> categories = categoryController.getAllCategories();
-        reloadComboBox(categories, categoryComboBox1);
-        reloadComboBox(categories, categoryComboBox2);
-        reloadComboBox(categories, categoryComboBox3);
-        reloadComboBox(categories, tableCategoryComboBox);
+        reloadComboBox(categories, categoryComboBox1, false);
+        reloadComboBox(categories, categoryComboBox2, true);
+        reloadComboBox(categories, categoryComboBox3, false);
+        reloadComboBox(categories, tableCategoryComboBox, false);
     }
 
-    public <T> void reloadComboBox(List<T> objects, JComboBox<String> comboBox) {
+    private <T> void reloadComboBox(List<T> objects, JComboBox<String> comboBox, boolean isFilter) {
         comboBox.removeAllItems();
+        if (isFilter) {
+            comboBox.addItem("");
+        }
         for (Object object : objects) {
             comboBox.addItem(object.toString());
         }
@@ -190,7 +195,7 @@ public class ProductsView {
         return productsPanel;
     }
 
-    private void reloadTable(List<Product> products) {
+    public void reloadTable(List<Product> products) {
         DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {

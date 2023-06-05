@@ -1,5 +1,7 @@
 package com.inventory_management_system.view;
 
+import com.inventory_management_system.controller.ProductController;
+import com.inventory_management_system.controller.PurchaseController;
 import com.inventory_management_system.controller.UserController;
 import com.inventory_management_system.model.User;
 
@@ -24,6 +26,9 @@ public class MainView extends JFrame {
 
     private UsersView usersView;
     private ProductsView productsView;
+    private final ProductController productController = new ProductController();
+    private PurchasesView purchasesView;
+    private final PurchaseController purchaseController = new PurchaseController();
     private final JPanel[] panels = new JPanel[7];
     private final User user;
 
@@ -46,12 +51,17 @@ public class MainView extends JFrame {
 
         inventoryButton.addActionListener(e -> switchPanel(inventoryPanel));
 
-        purchasesButton.addActionListener(e -> switchPanel(purchasesPanel));
+        purchasesButton.addActionListener(e -> {
+            purchasesView.reloadProduct();
+            purchasesView.reloadTable(purchaseController.getAllPurchases());
+            switchPanel(purchasesPanel);
+        });
 
         salesButton.addActionListener(e -> switchPanel(salesPanel));
 
         productsButton.addActionListener(e -> {
             productsView.reloadSuppliers();
+            productsView.reloadTable(productController.getAllProducts());
             switchPanel(productsPanel);
         });
 
@@ -81,7 +91,8 @@ public class MainView extends JFrame {
     private void createUIComponents() {
         // TODO: place custom component creation code here
         inventoryPanel = new InventoryView().getInventoryPanel();
-        purchasesPanel = new PurchasesView().getPurchasesPanel();
+        purchasesView = new PurchasesView();
+        purchasesPanel = purchasesView.getPurchasesPanel();
         salesPanel = new SalesView().getSalesPanel();
         productsView = new ProductsView();
         productsPanel = productsView.getProductsPanel();

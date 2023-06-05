@@ -6,9 +6,10 @@ import java.util.List;
 
 public interface ProductDao {
     List<Product> getAllProducts();
+    List<Product> getFilteredProducts(String filterName, int filterCategory, int filterSupplier);
     Product getProductById(int id);
     Product getProductByName(String name);
-    void addProduct(Product product);
+    boolean addProduct(Product product);
     void updateProduct(Product product);
     void updateProducts(List<Product> products);
     void deleteProduct(int id);

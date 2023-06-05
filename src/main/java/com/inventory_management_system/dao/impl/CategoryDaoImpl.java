@@ -1,10 +1,12 @@
 package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.CategoryDao;
+import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.exception.UnableToDeleteException;
 import com.inventory_management_system.model.Category;
 import com.inventory_management_system.model.Supplier;
 import com.inventory_management_system.util.DBUtil;
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -80,6 +82,8 @@ public class CategoryDaoImpl implements CategoryDao {
             preparedStatement.setString(1, category.getName());
             preparedStatement.setString(2, category.getDescription());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -93,6 +97,8 @@ public class CategoryDaoImpl implements CategoryDao {
             preparedStatement.setString(2, category.getDescription());
             preparedStatement.setInt(3, category.getId());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }

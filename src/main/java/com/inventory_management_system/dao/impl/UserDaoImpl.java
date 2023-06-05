@@ -1,8 +1,10 @@
 package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.UserDao;
+import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.model.User;
 import com.inventory_management_system.util.DBUtil;
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -140,6 +142,8 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getRole());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -154,6 +158,8 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(3, user.getRole());
             preparedStatement.setInt(4, user.getId());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -171,6 +177,8 @@ public class UserDaoImpl implements UserDao {
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }

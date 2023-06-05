@@ -1,10 +1,12 @@
 package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.ProductDao;
+import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.model.Category;
 import com.inventory_management_system.model.Product;
 import com.inventory_management_system.model.Supplier;
 import com.inventory_management_system.util.DBUtil;
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,6 +25,61 @@ public class ProductDaoImpl implements ProductDao {
         List<Product> products = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("select * from products");
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                double purchasePrice = rs.getDouble("purchase_price");
+                double salePrice = rs.getDouble("sale_price");
+                int quantity = rs.getInt("quantity");
+                int categoryId = rs.getInt("category_id");
+                int supplierId = rs.getInt("supplier_id");
+                CategoryDaoImpl categoryDao = new CategoryDaoImpl();
+                Category category = categoryDao.getCategoryById(categoryId);
+                SupplierDaoImpl supplierDao = new SupplierDaoImpl();
+                Supplier supplier = supplierDao.getSupplierById(supplierId);
+                Product product = new Product(id, name, description, purchasePrice, salePrice, quantity, category, supplier);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getFilteredProducts(String filterName, int filterCategory, int filterSupplier) {
+        List<Product> products = new ArrayList<>();
+        try {
+            StringBuilder stringBuilder = new StringBuilder("select * from products where");
+            List<String> conditions = new ArrayList<>();
+            List<Object> parameters = new ArrayList<>();
+            if (filterName != null && !filterName.isEmpty()) {
+                conditions.add("name like ?");
+                parameters.add("%" + filterName + "%");
+            }
+            if (filterCategory > 0) {
+                conditions.add("category_id = ?");
+                parameters.add(filterCategory);
+            }
+            if (filterSupplier > 0) {
+                conditions.add("supplier_id = ?");
+                parameters.add(filterSupplier);
+            }
+
+            if (!conditions.isEmpty()) {
+                String conditionsStr = String.join(" and ", conditions);
+                stringBuilder.append(" ").append(conditionsStr);
+            } else {
+                stringBuilder.append(" 1");
+            }
+
+            PreparedStatement preparedStatement = connection.prepareStatement(stringBuilder.toString());
+            for (int i = 0; i < parameters.size(); i++) {
+                preparedStatement.setObject(i + 1, parameters.get(i));
+            }
+
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -101,7 +158,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void addProduct(Product product) {
+    public boolean addProduct(Product product) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into products(name,description,purchase_price,sale_price,quantity,category_id,supplier_id) values (?, ?, ?, ?, ?, ?, ?)");
             preparedStatement.setString(1, product.getName());
@@ -112,9 +169,13 @@ public class ProductDaoImpl implements ProductDao {
             preparedStatement.setInt(6, product.getCategory().getId());
             preparedStatement.setInt(7, product.getSupplier().getId());
             preparedStatement.executeUpdate();
+            return true;
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override
@@ -130,6 +191,8 @@ public class ProductDaoImpl implements ProductDao {
             preparedStatement.setInt(7, product.getSupplier().getId());
             preparedStatement.setInt(8, product.getId());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -151,6 +214,8 @@ public class ProductDaoImpl implements ProductDao {
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -40,12 +40,8 @@ public class SuppliersView {
             String email = emailTextField1.getText();
             String phone = phoneTextField1.getText();
             String address = addressTextField1.getText();
-            if (name.length() <= 45 && description.length() <= 255 && email.length() <= 255 && phone.length() <= 20 && address.length() <= 255) {
-                supplierController.addSupplier(new Supplier(0, name, description, email, phone, address));
-                reloadTable(supplierController.getAllSuppliers());
-            } else {
-                new TooLongException();
-            }
+            supplierController.addSupplier(new Supplier(0, name, description, email, phone, address));
+            reloadTable(supplierController.getAllSuppliers());
         });
 
         reloadButton.addActionListener(e -> reloadTable(supplierController.getAllSuppliers()));
@@ -85,11 +81,7 @@ public class SuppliersView {
                 String email = (String) tableModel.getValueAt(i, 3);
                 String phone = (String) tableModel.getValueAt(i, 4);
                 String address = (String) tableModel.getValueAt(i, 5);
-                if (name.length() <= 45 && email.length() <= 255 && phone.length() <= 20 && address.length() <= 255) {
-                    suppliers.add(new Supplier(id, name, description, email, phone, address));
-                } else {
-                    new TooLongException();
-                }
+                suppliers.add(new Supplier(id, name, description, email, phone, address));
             }
             supplierController.updateSuppliers(suppliers);
             reloadTable(supplierController.getAllSuppliers());

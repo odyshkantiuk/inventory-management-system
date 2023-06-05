@@ -46,12 +46,8 @@ public class UsersView {
             String role = roleComboBox1.getSelectedItem().toString();
             if (passwordField1.getText().equals(passwordField2.getText())) {
                 String password = passwordField1.getText();
-                if (name.length() <= 45 && password.length() <= 128 && role.length() <= 45) {
-                    userController.addUser(new User(0, name, password, role));
-                    reloadTable(user, userController.getAllUsers());
-                } else {
-                    new TooLongException();
-                }
+                userController.addUser(new User(0, name, password, role));
+                reloadTable(user, userController.getAllUsers());
             } else {
                 new PasswordsMatchException();
             }
@@ -61,12 +57,8 @@ public class UsersView {
             String name = nameTextField2.getText();
             if (passwordField3.getText().equals(passwordField4.getText())) {
                 String password = passwordField3.getText();
-                if (name.length() <= 45 && password.length() <= 128) {
-                    userController.updateUser(new User(user.getId(), name, password, user.getRole()));
-                    reloadTable(user, userController.getAllUsers());
-                } else {
-                    new TooLongException();
-                }
+                userController.updateUser(new User(user.getId(), name, password, user.getRole()));
+                reloadTable(user, userController.getAllUsers());
             } else {
                 new PasswordsMatchException();
             }
@@ -105,11 +97,7 @@ public class UsersView {
                 String name = (String) tableModel.getValueAt(i, 1);
                 String password = userController.getUserById(id).getPassword();
                 String role = (String) tableModel.getValueAt(i, 2);
-                if (name.length() <= 45 && password.length() <= 128 && role.length() <= 45) {
-                    users.add(new User(id, name, password, role));
-                } else {
-                    new TooLongException();
-                }
+                users.add(new User(id, name, password, role));
             }
             userController.updateUsers(users);
             reloadTable(user, userController.getAllUsers());

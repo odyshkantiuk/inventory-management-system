@@ -3,6 +3,7 @@ package com.inventory_management_system.controller;
 import com.inventory_management_system.dao.ProductDao;
 import com.inventory_management_system.dao.impl.ProductDaoImpl;
 import com.inventory_management_system.exception.AlreadyExistsException;
+import com.inventory_management_system.exception.QuantityException;
 import com.inventory_management_system.model.Product;
 
 import java.util.HashSet;
@@ -20,6 +21,10 @@ public class ProductController {
         return productDao.getAllProducts();
     }
 
+    public List<Product> getFilteredProducts(String filterName, int filterCategory, int filterSupplier) {
+        return productDao.getFilteredProducts(filterName, filterCategory, filterSupplier);
+    }
+
     public Product getProductById(int id) {
         return productDao.getProductById(id);
     }
@@ -29,11 +34,15 @@ public class ProductController {
     }
 
     public boolean addProduct(Product product) {
-        if (!productDao.doesProductExist(product)) {
-            productDao.addProduct(product);
-            return true;
+        if (product.getQuantity() > 0) {
+            if (!productDao.doesProductExist(product)) {
+                return productDao.addProduct(product);
+            } else {
+                new AlreadyExistsException("Product");
+                return false;
+            }
         } else {
-            new AlreadyExistsException("Product");
+            new QuantityException();
             return false;
         }
     }
@@ -45,11 +54,16 @@ public class ProductController {
     public void updateProducts(List<Product> products) {
         Set<String> nameSet = new HashSet<>();
         for (Product product : products) {
-            if (productDao.doesProductExist(product)) {
-                new AlreadyExistsException("Product");
-                return;
-            } else if (!nameSet.add(product.getName())) {
-                new AlreadyExistsException("Product");
+            if (product.getQuantity() > 0) {
+                if (productDao.doesProductExist(product)) {
+                    new AlreadyExistsException("Product");
+                    return;
+                } else if (!nameSet.add(product.getName())) {
+                    new AlreadyExistsException("Product");
+                    return;
+                }
+            } else {
+                new QuantityException();
                 return;
             }
         }

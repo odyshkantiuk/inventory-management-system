@@ -1,10 +1,12 @@
 package com.inventory_management_system.dao.impl;
 
 import com.inventory_management_system.dao.SupplierDao;
+import com.inventory_management_system.exception.TooLongException;
 import com.inventory_management_system.exception.UnableToDeleteException;
 import com.inventory_management_system.model.Supplier;
 import com.inventory_management_system.model.User;
 import com.inventory_management_system.util.DBUtil;
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -149,6 +151,8 @@ public class SupplierDaoImpl implements SupplierDao {
             preparedStatement.setString(4, supplier.getPhone());
             preparedStatement.setString(5, supplier.getAddress());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -165,6 +169,8 @@ public class SupplierDaoImpl implements SupplierDao {
             preparedStatement.setString(5, supplier.getAddress());
             preparedStatement.setInt(6, supplier.getId());
             preparedStatement.executeUpdate();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -184,6 +190,8 @@ public class SupplierDaoImpl implements SupplierDao {
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
+        } catch (MysqlDataTruncation e) {
+            new TooLongException();
         } catch (SQLException e) {
             e.printStackTrace();
         }

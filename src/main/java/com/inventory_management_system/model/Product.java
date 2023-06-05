@@ -85,4 +85,9 @@ public class Product {
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
