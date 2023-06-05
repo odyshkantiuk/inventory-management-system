@@ -46,7 +46,7 @@ public class SupplierDaoImpl implements SupplierDao {
     public List<Supplier> getFilteredSuppliers(String filterName, String filterEmail, String filterPhone, String filterAddress) {
         List<Supplier> suppliers = new ArrayList<>();
         try {
-            StringBuilder stringBuilder = new StringBuilder("SELECT * FROM suppliers WHERE");
+            StringBuilder stringBuilder = new StringBuilder("select * from suppliers where");
             List<String> conditions = new ArrayList<>();
             List<Object> parameters = new ArrayList<>();
 
