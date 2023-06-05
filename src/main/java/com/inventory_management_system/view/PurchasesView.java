@@ -2,6 +2,7 @@ package com.inventory_management_system.view;
 
 import com.inventory_management_system.controller.ProductController;
 import com.inventory_management_system.controller.PurchaseController;
+import com.inventory_management_system.exception.DateParseException;
 import com.inventory_management_system.exception.NumberInputException;
 import com.inventory_management_system.model.Product;
 import com.inventory_management_system.model.Purchase;
@@ -11,15 +12,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 public class PurchasesView {
     private JPanel purchasesPanel;
@@ -46,8 +45,6 @@ public class PurchasesView {
         AutoCompleteDecorator.decorate(productComboBox2);
         AutoCompleteDecorator.decorate(tableProductComboBox);
         reloadTable(purchaseController.getAllPurchases());
-
-        DatePicker dp = new DatePicker();
 
         reloadButton.addActionListener(e -> reloadTable(purchaseController.getAllPurchases()));
 
@@ -120,6 +117,23 @@ public class PurchasesView {
             int productId = 0;
             if (!product.equals("")) {
                 productId = productController.getProductByName(product).getId();
+            }
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+            try {
+                Date fromDate = null;
+                Date toDate = null;
+                if (fromDateTextField.getText().equals("") && !toDateTextField.getText().equals("")) {
+                    toDate = dateFormat.parse(toDateTextField.getText());
+                } else if (!fromDateTextField.getText().equals("") && toDateTextField.getText().equals("")){
+                    fromDate = dateFormat.parse(fromDateTextField.getText());
+                } else if (!fromDateTextField.getText().equals("") && !toDateTextField.getText().equals("")) {
+                    fromDate = dateFormat.parse(fromDateTextField.getText());
+                    toDate = dateFormat.parse(toDateTextField.getText());
+                }
+                reloadTable(purchaseController.getFilteredPurchases(productId, fromDate, toDate));
+            } catch (ParseException ex) {
+                new DateParseException();
             }
         });
     }

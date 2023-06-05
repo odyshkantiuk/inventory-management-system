@@ -9,6 +9,7 @@ import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PurchaseDaoImpl implements PurchaseDao {
@@ -34,6 +35,54 @@ public class PurchaseDaoImpl implements PurchaseDao {
                 ProductDaoImpl productDao = new ProductDaoImpl();
                 Product product = productDao.getProductById(productId);
                 Purchase purchase = new Purchase(id, price, time, product, quantity);
+                purchases.add(purchase);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return purchases;
+    }
+
+    @Override
+    public List<Purchase> getFilteredPurchases(int filterProduct, Date fromDate, Date toDate) {
+        List<Purchase> purchases = new ArrayList<>();
+        try {
+            StringBuilder stringBuilder = new StringBuilder("select * from purchases where");
+            List<String> conditions = new ArrayList<>();
+            List<Object> parameters = new ArrayList<>();
+            if (filterProduct > 0) {
+                conditions.add("product_id = ?");
+                parameters.add(filterProduct);
+            }
+            if (fromDate != null && toDate != null) {
+                conditions.add("time BETWEEN ? AND ?");
+                parameters.add(new Timestamp(fromDate.getTime()));
+                parameters.add(new Timestamp(toDate.getTime()));
+            } else if (fromDate != null) {
+                conditions.add("time >= ?");
+                parameters.add(new Timestamp(fromDate.getTime()));
+            } else if (toDate != null) {
+                conditions.add("time <= ?");
+                parameters.add(new Timestamp(toDate.getTime()));
+            }
+            if (!conditions.isEmpty()) {
+                String conditionsStr = String.join(" AND ", conditions);
+                stringBuilder.append(" ").append(conditionsStr);
+            } else {
+                stringBuilder.append(" 1");
+            }
+            PreparedStatement preparedStatement = connection.prepareStatement(stringBuilder.toString());
+            for (int i = 0; i < parameters.size(); i++) {
+                preparedStatement.setObject(i + 1, parameters.get(i));
+            }
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int productId = rs.getInt("product_id");
+                Timestamp time = rs.getTimestamp("time");
+                double price = rs.getDouble("price");
+                int quantity = rs.getInt("quantity");
+                Purchase purchase = new Purchase(id, price, time, new ProductDaoImpl().getProductById(productId), quantity);
                 purchases.add(purchase);
             }
         } catch (SQLException e) {

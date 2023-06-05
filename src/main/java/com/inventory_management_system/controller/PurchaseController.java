@@ -6,6 +6,7 @@ import com.inventory_management_system.exception.QuantityException;
 import com.inventory_management_system.model.Product;
 import com.inventory_management_system.model.Purchase;
 
+import java.util.Date;
 import java.util.List;
 
 public class PurchaseController {
@@ -19,6 +20,10 @@ public class PurchaseController {
 
     public List<Purchase> getAllPurchases() {
         return purchaseDao.getAllPurchases();
+    }
+
+    public List<Purchase> getFilteredPurchases(int filterProduct, Date fromDate, Date toDate) {
+        return purchaseDao.getFilteredPurchases(filterProduct, fromDate, toDate);
     }
 
     public Purchase getPurchaseById(int id) {
